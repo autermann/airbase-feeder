@@ -4,17 +4,18 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http;
 
-import de.ifgi.airbase.feeder.util.Utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.ifgi.airbase.feeder.util.Utils;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>

@@ -169,7 +169,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
         ident = idenList.addNewIdentifier();
         term = ident.addNewTerm();
         term.setDefinition(OFFERING_DEFINITION);
-        term.setValue(getOfferingName(getStation()));
+        term.setValue(getOfferingIdentifier(getStation()));
     }
 
     /**

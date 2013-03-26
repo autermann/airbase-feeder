@@ -85,7 +85,7 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
         return name;
     }
 	
-    public static String getOfferingName(EEAStation station) {
+    public static String getOfferingIdentifier(EEAStation station) {
         String stationId = getStationId(station);
         StringBuilder sb = new StringBuilder(stationId);
         if (stationId.startsWith("urn:")) {

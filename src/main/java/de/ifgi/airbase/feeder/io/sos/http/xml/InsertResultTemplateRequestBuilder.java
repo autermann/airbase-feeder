@@ -62,7 +62,7 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         insertResultTemplateType.setService(SOS_SERVICE_NAME);
         InsertResultTemplateType.ProposedTemplate proposedTemplate = insertResultTemplateType.addNewProposedTemplate();
         ResultTemplateType resultTemplateType = proposedTemplate.addNewResultTemplate();
-        resultTemplateType.setOffering(getOfferingName(getStation()));
+        resultTemplateType.setOffering(getOfferingIdentifier(getStation()));
         resultTemplateType.setIdentifier(getResultTemplateIdentifier(getStation(), getConfiguration()));
         buildObservationTemplate(resultTemplateType);
         buildResultEncoding(resultTemplateType);
@@ -110,7 +110,7 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         quantityType.setDefinition(getPhenomenonId(getConfiguration().getComponentCode()));
         Field quantityField = dataRecordType.addNewField();
         quantityField.set(quantityDocument);
-        quantityField.setName(getOfferingName(getStation()));
+        quantityField.setName(getOfferingIdentifier(getStation()));
         
         resultTemplateType.addNewResultStructure().set(dataRecordDocument);
     }
