@@ -4,16 +4,19 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
-import de.ifgi.airbase.feeder.data.EEAConfiguration;
-import de.ifgi.airbase.feeder.data.EEAStation;
-import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
 import java.util.Collection;
+
 import net.opengis.sos.x20.SosInsertionMetadataDocument;
 import net.opengis.sos.x20.SosInsertionMetadataType;
 import net.opengis.swes.x20.InsertSensorDocument;
 import net.opengis.swes.x20.InsertSensorType;
 import net.opengis.swes.x20.InsertSensorType.ProcedureDescription;
+
 import org.apache.xmlbeans.XmlObject;
+
+import de.ifgi.airbase.feeder.data.EEAConfiguration;
+import de.ifgi.airbase.feeder.data.EEAStation;
+import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -44,8 +47,8 @@ public class InsertSensorRequestBuilder extends AbstractXmlBuilder<InsertSensorD
     public InsertSensorDocument build() throws NoValidInputsOrOutputsException {
         InsertSensorDocument insertSensorDocument = InsertSensorDocument.Factory.newInstance();
         InsertSensorType insertSensorType = insertSensorDocument.addNewInsertSensor();
-        insertSensorType.setService(AbstractXmlBuilder.SOS_SERVICE_NAME);
-        insertSensorType.setVersion(AbstractXmlBuilder.SOS_V2_SERVICE_VERSION);
+        insertSensorType.setService(SOS_SERVICE_NAME);
+        insertSensorType.setVersion(SOS_V2_SERVICE_VERSION);
         insertSensorType.setProcedureDescriptionFormat(SOSNamespaceUtils.SML_1_0_1_PROCEDURE_DESCRIPTION_FORMAT);
         ProcedureDescription procedureDescription = insertSensorType.addNewProcedureDescription();
         procedureDescription.set(getDescription());
