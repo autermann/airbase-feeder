@@ -112,7 +112,7 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         quantityType.setDefinition(getPhenomenonId(getConfiguration().getComponentCode()));
         Field quantityField = dataRecordType.addNewField();
         quantityField.set(quantityDocument);
-        quantityField.setName(getOfferingIdentifier(getStation()));
+        quantityField.setName(getNameForComponent(getConfiguration().getComponentCode()));
         
         resultTemplateType.addNewResultStructure().set(dataRecordDocument);
     }
