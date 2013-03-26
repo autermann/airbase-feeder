@@ -112,7 +112,7 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         quantityType.setDefinition(getPhenomenonId(getConfiguration().getComponentCode()));
         Field quantityField = dataRecordType.addNewField();
         quantityField.set(quantityDocument);
-        quantityField.setName(getNameForComponent(getConfiguration().getComponentCode()));
+        quantityField.setName(getPhenomenonFieldName());
         
         resultTemplateType.addNewResultStructure().set(dataRecordDocument);
     }
@@ -143,5 +143,9 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
 
     private String getPointId() {
         return String.format("p_%s", getStation().getEuropeanCode());
+    }
+
+    protected String getPhenomenonFieldName() {
+        return String.format("phen_%s", getNameForComponent(getConfiguration().getComponentCode()));
     }
 }
