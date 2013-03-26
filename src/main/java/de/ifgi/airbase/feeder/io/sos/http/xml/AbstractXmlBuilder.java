@@ -94,7 +94,11 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
             sb.append('/');
         }
         return sb.append("observations").toString();
-	}
+    }
+
+    public static String getOfferingName(EEAStation station) {
+        return station.getEuropeanCode();
+    }
 
 	public static String getStationId(EEAStation station) {
         return String.format(STATION_IDENTIFIER, station.getEuropeanCode());

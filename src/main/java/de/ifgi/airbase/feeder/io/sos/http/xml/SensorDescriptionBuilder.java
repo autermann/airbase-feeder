@@ -167,6 +167,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
         term.setValue(getStation().getName());
         
         ident = idenList.addNewIdentifier();
+        ident.setName(getOfferingName(getStation()));
         term = ident.addNewTerm();
         term.setDefinition(OFFERING_DEFINITION);
         term.setValue(getOfferingIdentifier(getStation()));
