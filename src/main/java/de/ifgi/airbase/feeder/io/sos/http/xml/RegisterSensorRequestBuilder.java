@@ -4,12 +4,14 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
-import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
 import net.opengis.om.x10.MeasurementType;
 import net.opengis.sos.x10.ObservationTemplateDocument;
 import net.opengis.sos.x10.RegisterSensorDocument;
+
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+
+import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
 
 /**
  *
@@ -32,8 +34,6 @@ public class RegisterSensorRequestBuilder extends AbstractXmlBuilder<RegisterSen
     /**
      * Creates a {@code RegisterSensorDocument} that registers a {@code EEAStation} at a SOS.
      * 
-     * @param station
-     *        the {@code EEASTation} that should be registered.
      * @return the RegisterSensor request
      * @throws NoValidInputsOrOutputsException 
      */
