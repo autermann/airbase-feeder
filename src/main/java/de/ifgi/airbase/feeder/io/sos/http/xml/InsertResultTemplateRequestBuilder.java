@@ -4,6 +4,8 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
+import static de.ifgi.airbase.feeder.io.sos.http.xml.AbstractXmlBuilder.getFeatureOfInterestId;
+
 import net.opengis.gml.x32.CodeWithAuthorityType;
 import net.opengis.gml.x32.DirectPositionType;
 import net.opengis.gml.x32.PointType;
@@ -117,7 +119,9 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
     
     protected void buildFeatureOfInterest(OMObservationType observationType) {
         SFSpatialSamplingFeatureDocument spatialSamplingFeatureDocument = SFSpatialSamplingFeatureDocument.Factory.newInstance();
-        SFSpatialSamplingFeatureType spatialSamplingFeatureType = spatialSamplingFeatureDocument.addNewSFSpatialSamplingFeature();
+        SFSpatialSamplingFeatureType spatialSamplingFeatureType = spatialSamplingFeatureDocument
+                .addNewSFSpatialSamplingFeature();
+        spatialSamplingFeatureType.setId(getSFSpatialSamplingPointIdentifier());
         CodeWithAuthorityType codeWithAuthorityType = spatialSamplingFeatureType.addNewIdentifier();
         codeWithAuthorityType.setCodeSpace(FEATURE_CODE_SPACE);
         codeWithAuthorityType.setStringValue(getFeatureOfInterestId(getStation()));
@@ -126,9 +130,18 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         ShapeType shapeType = spatialSamplingFeatureType.addNewShape();
         PointType pointType = (PointType) shapeType.addNewAbstractGeometry()
                 .substitute(SOSNamespaceUtils.QN_GML_3_2_POINT, PointType.type);
+        pointType.setId(getPointId());
         DirectPositionType directPositionType = pointType.addNewPos();
         directPositionType.setSrsName(EPSG_4326_REFERENCE_SYSTEM_DEFINITION);
         directPositionType.setStringValue(buildPosString(getStation()));
         observationType.addNewFeatureOfInterest().set(spatialSamplingFeatureDocument);
+    }
+
+    private String getSFSpatialSamplingPointIdentifier() {
+        return String.format("sf_%s", getStation().getEuropeanCode());
+    }
+
+    private String getPointId() {
+        return String.format("p_%s", getStation().getEuropeanCode());
     }
 }
