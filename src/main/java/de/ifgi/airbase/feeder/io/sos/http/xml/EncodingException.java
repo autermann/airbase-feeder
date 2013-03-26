@@ -8,4 +8,6 @@ package de.ifgi.airbase.feeder.io.sos.http.xml;
  *
  * @author Christian Autermann <c.autermann@52north.org>
  */
-public class EncodingException extends Exception {}
+public class EncodingException extends Exception {
+    private static final long serialVersionUID = 8914083792434080672L;
+}
