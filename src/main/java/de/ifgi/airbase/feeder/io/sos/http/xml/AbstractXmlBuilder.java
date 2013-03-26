@@ -1,26 +1,27 @@
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
-import de.ifgi.airbase.feeder.data.EEAConfiguration;
-import de.ifgi.airbase.feeder.data.EEAMeasurement;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Locale;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.ifgi.airbase.feeder.data.EEAStation;
-import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
-import de.ifgi.airbase.feeder.util.Utils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+
 import org.apache.xmlbeans.XmlObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.ifgi.airbase.feeder.Configuration;
+import de.ifgi.airbase.feeder.data.EEAConfiguration;
+import de.ifgi.airbase.feeder.data.EEAMeasurement;
+import de.ifgi.airbase.feeder.data.EEAStation;
+import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
+import de.ifgi.airbase.feeder.util.Utils;
 
 /**
  * @param <T> 
@@ -167,9 +168,9 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
     
     
     protected Collection<EEAConfiguration> getUniqueConfigurations(EEAStation station) throws NoValidInputsOrOutputsException {
-        HashMap<Integer, EEAConfiguration> uniqueConfigs = new HashMap<Integer, EEAConfiguration>();
+        HashMap<Integer, EEAConfiguration> uniqueConfigs = new HashMap<Integer, EEAConfiguration>(Configuration.getInstance().getComponentsToParse().size());
         for (EEAConfiguration config : station.getConfigurations()) {
-            if (!Utils.shouldBeIgnored(config.getComponentCode())) {
+            if (!Configuration.getInstance().shouldBeIgnored(config.getComponentCode())) {
                 uniqueConfigs.put(Integer.valueOf(config.getComponentCode()), config);
             }
         }

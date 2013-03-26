@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
+import de.ifgi.airbase.feeder.Configuration;
 import de.ifgi.airbase.feeder.data.EEAConfiguration;
 import de.ifgi.airbase.feeder.data.EEAStation;
 import de.ifgi.airbase.feeder.util.Utils;
@@ -28,7 +29,7 @@ class EEAConfigurationParser {
 			while ((line = reader.readNext()) != null) {
 				EEAConfiguration config = parseConfigurationLine(line);
 				
-				if (Utils.isAcceptableStation(config.getStationCode())) {
+				if (Configuration.getInstance().isAcceptableStation(config.getStationCode())) {
 					EEAStation station = stations.get(config.getStationCode());
 					config.setStation(station);
 					station.addConfiguration(config);

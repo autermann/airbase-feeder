@@ -1,13 +1,9 @@
 
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
-import de.ifgi.airbase.feeder.data.EEAConfiguration;
-import de.ifgi.airbase.feeder.data.EEAStation;
-import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
-import de.ifgi.airbase.feeder.util.Utils;
 import java.util.Collection;
 import java.util.LinkedList;
-import net.opengis.gml.MetaDataPropertyType;
+
 import net.opengis.gml.TimePeriodType;
 import net.opengis.sensorML.x101.CapabilitiesDocument.Capabilities;
 import net.opengis.sensorML.x101.ClassificationDocument.Classification;
@@ -39,10 +35,15 @@ import net.opengis.swe.x101.TextDocument.Text;
 import net.opengis.swe.x101.VectorPropertyType;
 import net.opengis.swe.x101.VectorType;
 import net.opengis.swe.x101.VectorType.Coordinate;
-import org.apache.xmlbeans.XmlCursor;
+
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlOptions;
 import org.joda.time.DateTime;
+
+import de.ifgi.airbase.feeder.data.EEAConfiguration;
+import de.ifgi.airbase.feeder.data.EEAStation;
+import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
+import de.ifgi.airbase.feeder.util.Utils;
 
 /**
  * Class to build a {@code RegisterSensorDocument} for an {@code EEAStation}.
@@ -226,13 +227,12 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             Classifier classifier = classifierList.addNewClassifier();
             classifier.setName(CLASSIFIER_NAME_STREET_TYPE);
             Term term = classifier.addNewTerm();
-            term.setDefinition(Utils.get("eea.urn.classifier.street"));
+            term.setDefinition(CLASSIFIER_DEFINITION_STREET);
             term.setValue(escapeCharacters(getStation().getStreetType().trim()));
         }
     }
 
     /**
-     * @param station
      * @param systemType
      */
     protected void buildValidTime(SystemType systemType) {
@@ -256,7 +256,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
         
         for (EEAConfiguration configuration : uniqueConfigs) {
         	
-            String name = getOfferingName(configuration.getComponentCode());//configuration.getComponentName().replace(' ', '_').toUpperCase();
+            String name = getNameForComponent(configuration.getComponentCode());
 
             /* inputs */
             IoComponentPropertyType ioComp = inputList.addNewInput();

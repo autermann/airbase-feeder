@@ -66,13 +66,14 @@ public class Unzipper {
 	}
 
 	private void unzip() throws ZipException, IOException {
-		if (this.unzippedMain)
-			return;
+        if (this.unzippedMain) {
+            return;
+        }
 		
 		this.unzippedMain = true;
 
 		long start = System.currentTimeMillis();
-		this.directory = new File(this.zipFile.getParent() + File.separator + this.country);
+        this.directory = new File(this.zipFile.getParent(), this.country);
 		log.info("Unzipping from \"{}\" to \"{}\"", this.zipFile.getName(),
 				this.directory);
 		if (this.directory.exists()) {
@@ -83,8 +84,9 @@ public class Unzipper {
 		extractArchive(this.zipFile, this.directory);
 		// extract the raw data files
 		File rawZip = getRawDataFile();
-		if (rawZip != null)
-			extractArchive(rawZip, getRawDataDirectory());
+        if (rawZip != null) {
+            extractArchive(rawZip, getRawDataDirectory());
+        }
 		log.debug("Unzipped {}MB in {}. Files:\n\tConfig:\t\t{}\n\tStations:\t{}\n\tStatistics:\t{}\n\tXMLData:\t{}\n\tData Directory:\t{}",
 				new Object[] { Long.valueOf((this.zipFile.length()) / (1024 * 1024)),
 						Utils.timeElapsed(start), getConfigurationFile(),
@@ -100,7 +102,7 @@ public class Unzipper {
 	 * @return the directory containing the raw data files
 	 */
 	public File getRawDataDirectory() {
-		return new File(getPath() + AIRBASE_RAW_DATA_DIRECTORY_NAME);
+        return new File(getPath(AIRBASE_RAW_DATA_DIRECTORY_NAME));
 	}
 
 	/**

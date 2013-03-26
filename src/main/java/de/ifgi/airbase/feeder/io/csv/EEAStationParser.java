@@ -10,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
+import de.ifgi.airbase.feeder.Configuration;
 import de.ifgi.airbase.feeder.data.EEAStation;
 import de.ifgi.airbase.feeder.util.Utils;
 
 class EEAStationParser {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(EEAStationParser.class);
+	private static final Logger log = LoggerFactory.getLogger(EEAStationParser.class);
 
 	static Map<String, EEAStation> parse(File file) throws IOException {
 		CSVReader reader = null;
@@ -27,7 +27,7 @@ class EEAStationParser {
 			String[] line;
 			while ((line = reader.readNext()) != null) {
 				EEAStation s = parseStationLine(line);
-				if (Utils.isAcceptableStation(s.getEuropeanCode())) {
+				if (Configuration.getInstance().isAcceptableStation(s.getEuropeanCode())) {
 					stations.put(s.getEuropeanCode(), s);
 				}
 			}
@@ -65,4 +65,7 @@ class EEAStationParser {
 		station.setEMEPStation(line[19]);
 		return station;
 	}
+
+    private EEAStationParser() {
+    }
 }

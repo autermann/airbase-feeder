@@ -1,19 +1,22 @@
 package de.ifgi.airbase.feeder.io.sos.http;
 
-import de.ifgi.airbase.feeder.io.sos.http.xml.SoapRequestBuilder;
-import de.ifgi.airbase.feeder.io.sos.http.xml.InsertResultTemplateRequestBuilder;
+import de.ifgi.airbase.feeder.Configuration;
 import de.ifgi.airbase.feeder.data.EEAConfiguration;
 import de.ifgi.airbase.feeder.data.EEAMeasurement;
 import de.ifgi.airbase.feeder.data.EEARawDataFile;
 import de.ifgi.airbase.feeder.data.EEAStation;
 import de.ifgi.airbase.feeder.io.sos.http.xml.EncodingException;
 import de.ifgi.airbase.feeder.io.sos.http.xml.InsertResultRequestBuilder;
+import de.ifgi.airbase.feeder.io.sos.http.xml.InsertResultTemplateRequestBuilder;
 import de.ifgi.airbase.feeder.io.sos.http.xml.InsertSensorRequestBuilder;
 import de.ifgi.airbase.feeder.io.sos.http.xml.SensorDescriptionBuilder;
+import de.ifgi.airbase.feeder.io.sos.http.xml.SoapRequestBuilder;
 import de.ifgi.airbase.feeder.util.Utils;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.opengis.sos.x20.InsertResultTemplateDocument;
 import net.opengis.swes.x20.InsertSensorDocument;
 
@@ -33,9 +36,12 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
     }
 
     private void insertResultTemplates(EEAStation station) throws IOException, RequestFailedException {
+        Set<Integer> componentCodes = new HashSet<Integer>(Configuration.getInstance().getComponentsToParse().size());
         for (EEAConfiguration configuration : station.getConfigurations()) {
-            if (!Utils.shouldBeIgnored(configuration.getComponentCode())) {
+            final int componentCode = configuration.getComponentCode(); 
+            if (!Configuration.getInstance().shouldBeIgnored(componentCode) && !componentCodes.contains(componentCode)) {
                 insertResultTemplate(station, configuration);
+                componentCodes.add(componentCode);
             }
         }
     }

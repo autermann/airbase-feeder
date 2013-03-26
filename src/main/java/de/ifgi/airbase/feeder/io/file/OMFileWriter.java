@@ -24,6 +24,7 @@ import org.uncertweb.api.om.result.MeasureResult;
 import org.uncertweb.api.om.sampling.SpatialSamplingFeature;
 
 import com.vividsolutions.jts.geom.Point;
+import de.ifgi.airbase.feeder.Configuration;
 
 import de.ifgi.airbase.feeder.data.EEAMeasurement;
 import de.ifgi.airbase.feeder.data.EEARawDataFile;
@@ -73,7 +74,7 @@ public class OMFileWriter {
 	 * 
 	 * @param outputFile
 	 *            file to which the observations should be written
-	 * @param files
+	 * @param inputFiles
 	 * 			array of input files read from EEA input
 	 * 
 	 */
@@ -96,49 +97,38 @@ public class OMFileWriter {
 	 * @param file
 	 * 			file containing the observations
 	 * @return returns UncertWeb observation collection
-	 */
-	private IObservationCollection convertEEAFile2UWObsCol(EEARawDataFile file) {
-		int index = 0;
-		TimeRangeFilter trf = Utils.getTimeRangeFilter();
-		List<EEAMeasurement> allMeasurements = file.getMeasurements();
-		IObservationCollection obsCol = null;
-		Collection<Measurement> measCol = new ArrayList<Measurement>(allMeasurements.size());
-		
-		while (index < allMeasurements.size()) {
-			Measurement meas = null;
-			while (index < allMeasurements.size()) {
-				EEAMeasurement e = allMeasurements.get(index);
-				if (e.isValid() && (trf == null || trf.accept(e))) {
-
-					SpatialSamplingFeature foi = null;
-					try {
-						foi = createSF4EEAStation(file
-								.getStation());
-					
-					TimeObject resultTime = new TimeObject(
-							Utils.ISO8601_DATETIME_FORMAT.print(e.getTime()));
-					String procedureID = AbstractXmlBuilder.getStationId(file.getStation());
-					String obsProp = AbstractXmlBuilder.getPhenomenonId(file.getConfiguration()
-							.getComponentCode());
-					IUncertainty[] uncertainty = {createRandomNormalDistribution(0,1,0)};
-					String uom = file.getConfiguration().getMeasurementUnit();
-					double obsResult = e.getValue();
-					meas = new Measurement(resultTime,resultTime,new URI(procedureID),new URI(obsProp),foi,new MeasureResult(obsResult,uom));
-					DQ_UncertaintyResult[] uncArray = {new DQ_UncertaintyResult(uncertainty, uom)};
-					meas.setResultQuality(uncArray);
-					measCol.add(meas);
-					} catch (Exception e1) {
-						throw new RuntimeException(e1);
-					}
-
-				}
-				index++;
-			}
-
-		}
-		obsCol = new MeasurementCollection(new LinkedList<Measurement>(measCol));
-		return obsCol;
-	}
+     */
+    private IObservationCollection convertEEAFile2UWObsCol(EEARawDataFile file) {
+        int index = 0;
+        TimeRangeFilter trf = Configuration.getInstance().getTimeRangeFilter();
+        List<EEAMeasurement> allMeasurements = file.getMeasurements();
+        Collection<Measurement> measCol = new ArrayList<Measurement>(allMeasurements.size());
+        while (index < allMeasurements.size()) {
+            Measurement meas;
+            while (index < allMeasurements.size()) {
+                EEAMeasurement e = allMeasurements.get(index);
+                if (e.isValid() && (trf == null || trf.accept(e))) {
+                    try {
+                        SpatialSamplingFeature foi = createSF4EEAStation(file.getStation());
+                        TimeObject resultTime = new TimeObject(Utils.ISO8601_DATETIME_FORMAT.print(e.getTime()));
+                        String procedureID = AbstractXmlBuilder.getStationId(file.getStation());
+                        String obsProp = AbstractXmlBuilder.getPhenomenonId(file.getConfiguration().getComponentCode());
+                        IUncertainty[] uncertainty = {createRandomNormalDistribution(0, 1, 0)};
+                        String uom = file.getConfiguration().getMeasurementUnit();
+                        double obsResult = e.getValue();
+                        meas = new Measurement(resultTime, resultTime, new URI(procedureID), new URI(obsProp), foi, new MeasureResult(obsResult, uom));
+                        DQ_UncertaintyResult[] uncArray = {new DQ_UncertaintyResult(uncertainty, uom)};
+                        meas.setResultQuality(uncArray);
+                        measCol.add(meas);
+                    } catch (Exception e1) {
+                        throw new RuntimeException(e1);
+                    }
+                }
+                index++;
+            }
+        }
+        return new MeasurementCollection(new LinkedList<Measurement>(measCol));
+    }
 
 	/**
 	 * 

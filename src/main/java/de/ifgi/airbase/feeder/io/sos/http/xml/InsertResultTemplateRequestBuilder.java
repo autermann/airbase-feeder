@@ -4,9 +4,6 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
-import de.ifgi.airbase.feeder.data.EEAConfiguration;
-import de.ifgi.airbase.feeder.data.EEAStation;
-import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
 import net.opengis.gml.x32.CodeWithAuthorityType;
 import net.opengis.gml.x32.DirectPositionType;
 import net.opengis.gml.x32.PointType;
@@ -27,6 +24,10 @@ import net.opengis.swe.x20.TextEncodingDocument;
 import net.opengis.swe.x20.TextEncodingType;
 import net.opengis.swe.x20.TimeDocument;
 import net.opengis.swe.x20.TimeType;
+
+import de.ifgi.airbase.feeder.data.EEAConfiguration;
+import de.ifgi.airbase.feeder.data.EEAStation;
+import de.ifgi.airbase.feeder.util.SOSNamespaceUtils;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
@@ -109,7 +110,7 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         quantityType.setDefinition(getPhenomenonId(getConfiguration().getComponentCode()));
         Field quantityField = dataRecordType.addNewField();
         quantityField.set(quantityDocument);
-        quantityField.setName(getOfferingName(getConfiguration().getComponentCode()));
+        quantityField.setName(getOfferingName(getStation()));
         
         resultTemplateType.addNewResultStructure().set(dataRecordDocument);
     }

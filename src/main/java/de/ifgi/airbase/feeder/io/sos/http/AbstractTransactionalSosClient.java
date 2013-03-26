@@ -4,6 +4,7 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http;
 // <editor-fold defaultstate="collapsed" desc="Imports">
+import de.ifgi.airbase.feeder.Configuration;
 import de.ifgi.airbase.feeder.data.EEAMeasurement;
 import de.ifgi.airbase.feeder.data.EEARawDataFile;
 import de.ifgi.airbase.feeder.io.filter.TimeRangeFilter;
@@ -297,7 +298,7 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
     public void insertObservations(EEARawDataFile file) throws IOException, RequestFailedException {
         long start = System.currentTimeMillis();
         int index = 0, requestCount = 0;
-        TimeRangeFilter trf = Utils.getTimeRangeFilter();
+        TimeRangeFilter trf = Configuration.getInstance().getTimeRangeFilter();
         List<EEAMeasurement> allMeasurements = file.getMeasurements();
         while (index < allMeasurements.size()) {
             List<EEAMeasurement> valuesToInsert = new LinkedList<EEAMeasurement>();
