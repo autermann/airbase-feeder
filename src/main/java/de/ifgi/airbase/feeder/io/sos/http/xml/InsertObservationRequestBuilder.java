@@ -151,7 +151,7 @@ public class InsertObservationRequestBuilder extends AbstractXmlBuilder<InsertOb
 				getFile().getConfiguration().getMeasurementUnit().replace(' ', '_'));
 		DataComponentPropertyType featureField = sdrt.addNewField();
 		featureField.setName("feature");
-		featureField.addNewText().setDefinition(FOI_DEFINITION);
+		featureField.addNewText().setDefinition(FEATURE_DEFINITION);
 		TextBlock textBlock = dataArray.addNewEncoding().addNewTextBlock();
 		textBlock.setDecimalSeparator(SWE_DATA_ARRAY_DECIMAL_SEPERATOR);
 		textBlock.setTokenSeparator(SWE_DATA_ARRAY_TOKEN_SEPERATOR);

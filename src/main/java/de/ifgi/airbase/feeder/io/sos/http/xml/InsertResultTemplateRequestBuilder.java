@@ -127,7 +127,7 @@ public class InsertResultTemplateRequestBuilder extends AbstractXmlBuilder<Inser
         PointType pointType = (PointType) shapeType.addNewAbstractGeometry()
                 .substitute(SOSNamespaceUtils.QN_GML_3_2_POINT, PointType.type);
         DirectPositionType directPositionType = pointType.addNewPos();
-        directPositionType.setSrsName(EPSG_4326_REFERENCE_SYSTEM_DEFINITION_URL);
+        directPositionType.setSrsName(EPSG_4326_REFERENCE_SYSTEM_DEFINITION);
         directPositionType.setStringValue(buildPosString(getStation()));
         observationType.addNewFeatureOfInterest().set(spatialSamplingFeatureDocument);
     }

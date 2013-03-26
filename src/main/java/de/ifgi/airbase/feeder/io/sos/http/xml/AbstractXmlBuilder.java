@@ -36,19 +36,19 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
 	protected static final String SOS_V1_SERVICE_VERSION = "1.0.0";
     protected static final String SOS_V2_SERVICE_VERSION = "2.0.0";
     
-	protected static final String UNIQUE_ID_DEFINITION = Utils.get("eea.urn.definition.uniqueId");
-	protected static final String LONG_NAME_DEFINITION = Utils.get("eea.urn.definition.longName");
-    protected static final String SHORT_NAME_DEFINITION = Utils.get("eea.urn.definition.shortName");
-    protected static final String OFFERING_DEFINITION = Utils.get("eea.urn.definition.offering");
-	protected static final String FOI_DEFINITION = Utils.get("eea.urn.definition.foi");
-	protected static final String EPSG_4326_REFERENCE_SYSTEM_DEFINITION = Utils.get("eea.urn.definition.epsg.4326.urn");
-    protected static final String EPSG_4326_REFERENCE_SYSTEM_DEFINITION_URL = Utils.get("eea.urn.definition.epsg.4326.url");
-	protected static final String ISO8601_TIME_FORMAT_DEFINITION = Utils.get("eea.urn.definition.iso.8601");
-	protected static final String STATION_URN_PREFIX = Utils.get("eea.urn.id.stationPrefix");
-	protected static final String FOI_URN_PREFIX = Utils.get("eea.urn.id.foiPrefix");
-	protected static final String DF_URN_PREFIX = Utils.get("eea.urn.id.dfPrefix");
-	protected static final String COMPONENT_URN_PREFIX = Utils.get("eea.urn.id.propertyPrefix.component");
-    
+    protected static final String UNIQUE_ID_DEFINITION = Utils.get("eea.def.uniqueId");
+    protected static final String LONG_NAME_DEFINITION = Utils.get("eea.def.longName");
+    protected static final String SHORT_NAME_DEFINITION = Utils.get("eea.def.shortName");
+    protected static final String OFFERING_DEFINITION = Utils.get("eea.def.offering");
+    protected static final String FEATURE_DEFINITION = Utils.get("eea.def.feature");
+    protected static final String EPSG_4326_REFERENCE_SYSTEM_DEFINITION = Utils.get("eea.def.epsg.4326");
+    protected static final String ISO8601_TIME_FORMAT_DEFINITION = Utils.get("eea.def.iso.8601");
+    protected static final String PHENOMENON_TIME_DEFINITION = Utils.get("eea.uri.def.phenomenonTime");
+    protected static final String STATION_IDENTIFIER = Utils.get("eea.identifier.station");
+    protected static final String FEATURE_OF_INTEREST_IDENTIFIER = Utils.get("eea.identifier.featureOfInterest");
+    protected static final String DOMAIN_FEATURE_IDENTIFIER = Utils.get("eea.identifier.domainFeature");
+    protected static final String COMPONENT_IDENTIFIER = Utils.get("eea.identifier.component");
+    protected static final String PHENOMENON_IDENTIFIER = Utils.get("eea.identifier.phenomenon");
 	protected static final String COORDINATE_UOM = "degree";
 	protected static final String METER_UOM = "m";
 	protected static final String SWE_DATA_ARRAY_BLOCK_SEPERATOR = ";";
@@ -60,82 +60,45 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
     
 	protected static final Logger log = LoggerFactory.getLogger(AbstractXmlBuilder.class);
 	
-	private static HashMap<Integer,String> offeringsCache = new HashMap<Integer, String>();
 	private static HashMap<Integer,String> phenomenonsCache = new HashMap<Integer, String>();
-	private static HashMap<Integer,String> componentsCache = new HashMap<Integer, String>();
     protected static final String ISO8601_GREGORIAN_UOM = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
-    protected static final String PHENOMENON_TIME_DEFINITION = "http://www.opengis.net/def/property/OGC/0/PhenomenonTime";
+    
     protected static final String PHENOMENON_TIME_FIELD = "phenomenonTime";
     protected static final String TEMPLATE_NIL_REASON = "template";
 
-    public static final String FEATURE_CODE_SPACE = Utils.get("eea.urn.featureCodeSpace");
-    public static final String URN_PREFIX = "urn:";
+    public static final String FEATURE_CODE_SPACE = Utils.get("eea.codeSpace.feature");
 
-	public static String getPhenomenonId(int componentCode) {
-		Integer code = new Integer(componentCode);
-		String id = phenomenonsCache.get(code);
-		if (id == null) {
-			phenomenonsCache.put(code, id = Utils.get("eea.phenomenon.mapping." + componentCode));
-		}
-		return id;
+    public static String getPhenomenonId(int componentCode) {
+        return String.format(PHENOMENON_IDENTIFIER, componentCode);
 	}
 
-	public static String getComponentId(int componentCode) {
-		Integer code = new Integer(componentCode);
-		String id = componentsCache.get(code);
-		if (id == null) {
-			componentsCache.put(code, id = COMPONENT_URN_PREFIX + getOfferingName(componentCode));
-		}
-		return id;
-	}
-	
-	public static String getOfferingName(int componentCode) {
-		Integer code = new Integer(componentCode);
-		String offering = offeringsCache.get(code);
-		if (offering == null) {
+    public static String getComponentId(int componentCode) {
+        return String.format(COMPONENT_IDENTIFIER, componentCode);
+    }
 
-			String phen = getPhenomenonId(componentCode);
-            if (phen == null) {
-                return null;
-            }
-			char[] phenChars = phen.toCharArray();
-			StringBuffer buf = new StringBuffer();
-			if (phenChars[phenChars.length - 1] != ')') {
-				throw new RuntimeException(
-						"Expected Phenomenon Id that ends with '(...)'; was '" + phen + "'.");
-			}
-			for (int i = phenChars.length - 2; i >= 0; i--) {
-				if (phenChars[i] != '(') {
-					buf.append(phenChars[i]);
-				} else {
-					break;
-				}
-			}
-			offeringsCache.put(code, offering = buf.reverse().toString());
-		}
-		return offering;
-	}
-    
-    public static String getOfferingName(EEAStation station) {
-        String procedure = getStationId(station);
-        if (procedure.startsWith(URN_PREFIX)) {
-            return station.getEuropeanCode();
-        } else {
-            return getStationId(station) + "/observations";
+    public static String getNameForComponent(int component) {
+        Integer code = new Integer(component);
+        String name = phenomenonsCache.get(code);
+        if (name == null) {
+            phenomenonsCache.put(code, name = Utils.get(String.format("eea.phenomenon.name.%d", code)));
         }
+        return name;
+    }
+	
+    public static String getOfferingName(EEAStation station) {
+        return getStationId(station) + "/observations";
 	}
 
 	public static String getStationId(EEAStation station) {
-		String code = station.getEuropeanCode();
-		return STATION_URN_PREFIX + code;//.substring(0, 2) + ":" + code.substring(2);
+        return String.format(STATION_IDENTIFIER, station.getEuropeanCode());
 	}
 
 	public static String getFeatureOfInterestId(EEAStation station) {
-		return FOI_URN_PREFIX + station.getEuropeanCode();
+        return String.format(FEATURE_OF_INTEREST_IDENTIFIER, station.getEuropeanCode());
 	}
 
 	public static String getDomainFeatureId(EEAStation station) {
-		return DF_URN_PREFIX + station.getEuropeanCode();
+        return String.format(DOMAIN_FEATURE_IDENTIFIER, station.getEuropeanCode());
 	}
 
 	protected String buildPosString(EEAStation station) {
@@ -158,12 +121,10 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
 
     protected String getResultTemplateIdentifier(EEAStation station, EEAConfiguration configuration) {
         String procedure = getStationId(station);
-        boolean urn = procedure.startsWith(InsertResultTemplateRequestBuilder.URN_PREFIX);
         return new StringBuilder(procedure)
-                .append(urn ? ":" : "/")
-                .append("resultTemplate")
-                .append(urn ? ":" : "/")
-                .append(getOfferingName(configuration.getComponentCode())).toString();
+                .append("/resultTemplate/")
+                .append(getNameForComponent(configuration.getComponentCode()))
+                .toString();
     }
     
     

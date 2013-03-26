@@ -24,14 +24,12 @@ import de.ifgi.airbase.feeder.util.Utils;
 public class Unzipper {
 	private static final String AIRBASE_FILE_PREFIX = "AirBase";
 	
-	//private static final String AIRBASE_FILE_VERSION = "v4";
-	//TODO needs to be updated to newer version
-	private static final String AIRBASE_FILE_VERSION = "v4";
+    private static final String AIRBASE_FILE_VERSION = Utils.get("eea.airbase.version");
 	private static final String AIRBASE_FILE_SEPERATOR = "_";
 	private static final String AIRBASE_STATISTICS_FILE_SUFFIX = "statistics.csv";
 	private static final String AIRBASE_STATIONS_FILE_SUFFIX = "stations.csv";
 	private static final String AIRBASE_RAWDATA_FILE_SUFFIX = "rawdata.zip";
-	private static final String AIRBASE_RAW_DATA_DIRECTORY_NAME = "raw";
+    private static final String AIRBASE_RAW_DATA_DIRECTORY_NAME = "rawdata";
 	private static final String AIRBASE_XML_FILE_SUFFIX = "xmldata.zip";
 	private static final String AIRBASE_CONFIG_FILE_SUFFIX = "measurement_configurations.csv";
 
@@ -134,18 +132,25 @@ public class Unzipper {
 	}
 
 	private File getFile(String ext) {
-		File f = new File(getPath() + ext);
-		if (f.exists())
-			return f;
+        File f = new File(getPath(ext));
+        if (f.exists()) {
+            return f;
+        }
 		return null;
 	}
 
-	private String getPath() {
-		String absFilePath = new StringBuilder().append(this.directory.getAbsoluteFile())
-		.append(File.separator).append(AIRBASE_FILE_PREFIX)
-		.append(AIRBASE_FILE_SEPERATOR).append(this.country.toUpperCase())
-		.append(AIRBASE_FILE_SEPERATOR).append(AIRBASE_FILE_VERSION)
-		.append(AIRBASE_FILE_SEPERATOR).toString();
+    private String getPath(String ext) {
+        String absFilePath = new StringBuilder()
+                .append(this.directory.getAbsoluteFile())
+                .append(File.separator)
+                .append(AIRBASE_FILE_PREFIX)
+                .append(AIRBASE_FILE_SEPERATOR)
+                .append(this.country.toUpperCase())
+                .append(AIRBASE_FILE_SEPERATOR)
+                .append("v")
+                .append(AIRBASE_FILE_VERSION)
+                .append(AIRBASE_FILE_SEPERATOR)
+                .append(ext).toString();
 		log.info("File path created is: " + absFilePath);
 		return absFilePath;
 	}

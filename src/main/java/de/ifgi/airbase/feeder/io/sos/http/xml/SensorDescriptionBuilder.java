@@ -62,24 +62,50 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
     private static final String UOM_CODE_LATLON = "degree";
     private static final String COORD_NAME_ALTITUDE = "altitude";
     private static final String CLASSIFIER_NAME_SENSOR_TYPE = "sensorType";
+    private static final String CLASSIFIER_DEFINITION_SENSOR_TYPE = Utils.get("eea.def.classifier.sensorType");
     private static final String CLASSIFIER_NAME_TYPE_OF_SENSOR = "typeOfSensor";
+    private static final String CLASSIFIER_DEFINITION_TYPE_OF_SENSOR = Utils.get("eea.def.classifier.typeOfSensor");
     private static final String CLASSIFIER_NAME_INTENDED_APPLICATION = "intendedApplication";
+    private static final String CLASSIFIER_DEFINITION_INTENDED_APPLICATION = Utils.get("eea.def.classifier.application");
+    private static final String CLASSIFIER_VALUE_INTENDED_APPLICATION = Utils.get("eea.sensor.intendedApplication");
     private static final String CLASSIFIER_NAME_OZONE = "stationOzoneType";
+    private static final String CLASSIFIER_DEFINITION_OZONE = Utils.get("eea.def.classifier.ozone");
     private static final String CLASSIFIER_NAME_AREA_TYPE = "stationAreaType";
+    private static final String CLASSIFIER_DEFINITION_AREA_TYPE = Utils.get("eea.def.classifier.area");
     private static final String CLASSIFIER_NAME_SUBCAT_RURAL = "stationSubCatRural";
+    private static final String CLASSIFIER_DEFINITION_SUBCAT_RURAL = Utils.get("eea.def.classifier.rural");
     private static final String CLASSIFIER_NAME_STREET_TYPE = "streetType";
-    private static final String ELEMENT_NAME_OFFERING = "offering";
-    private static final String ELEMENT_NAME_ID = "id";
-    private static final String ELEMENT_NAME_NAME = "name";
-    private static final String FIELD_NAME_BBOX = "observedBBOX";
-    private static final String FIELD_NAME_STATUS = "status";
-    private static final String FIELD_NAME_EMEP = "EMEP_station";
-    private static final String FIELD_NAME_LOCAL_CODE = "station_local_code";
-    private static final String FIELD_NAME_LAU1_CODE = "lau_level1_code";
-    private static final String FIELD_NAME_LAU2_CODE = "lau_level2_code";
-    private static final String FIELD_NAME_LAU2_NAME = "lau_level2_name";
+    private static final String CLASSIFIER_DEFINITION_STREET = Utils.get("eea.def.classifier.street");
     
-    private static String[] ADDITIONAL_KEYWORDS = Utils.get("eea.keywords").split(";");
+    
+    
+    
+    private static final String BBOX_FIELD_NAME = "observedBBOX";
+    private static final String BBOX_DEFINITION = Utils.get("eea.def.bbox");
+    private static final String STATUS_FIELD_NAME = "status";
+    private static final String STATUS_DEFINITION = Utils.get("eea.def.status");
+    private static final String EMEP_STATION_FIELD_NAME = "EMEP_station";
+    private static final String EMEP_STATION_DEFINITION = Utils.get("eea.def.emepstation");
+    private static final String STATION_LOCAL_CODE_FIELD_NAME = "station_local_code";
+    private static final String STATION_LOCAL_CODE_DEFINITION = Utils.get("eea.def.station_local_code");
+    private static final String LAU_LEVEL1_CODE_FIELD_NAME = "lau_level1_code";
+    private static final String LAU_LEVEL1_CODE_DEFINITION = Utils.get("eea.def.lau_level1_code");
+    private static final String LAU_LEVEL2_CODE_FIELD_NAME = "lau_level2_code";
+    private static final String LAU_LEVEL2_CODE_DEFINITION = Utils.get("eea.def.lau_level2_code");
+    private static final String LAU_LEVEL2_NAME_FIELD_NAME = "lau_level2_name";
+    private static final String LAU_LEVEL2_NAME_DEFINITION = Utils.get("eea.def.lau_level2_name");
+    
+    private static final String CAPABILITIES_DEFINITION = Utils.get("eea.def.caps");
+    private static final String[] ADDITIONAL_KEYWORDS = Utils.get("eea.keywords").split(";");
+    private static final String SENSOR_DESCRIPTION = Utils.get("eea.sensor.description");
+    private static final String CONTACT_INDIVIDUAL_NAME = Utils.get("eea.sensor.contact.individualName");
+    private static final String CONTACT_ORGANIZATION_NAME = Utils.get("eea.sensor.contact.organizationName");
+    private static final String CONTACT_CITY = Utils.get("eea.sensor.contact.city");
+    private static final String CONTACT_POSTAL_CODE = Utils.get("eea.sensor.contact.postalCode");
+    private static final String CONTACT_COUNTRY = Utils.get("eea.sensor.contact.country");
+    private static final String CONTACT_EMAIL_ADDRESS = Utils.get("eea.sensor.contact.email");
+    private static final String CONTACT_DELIVERY_POINT = Utils.get("eea.sensor.contact.deliveryPoint");
+    private static final String CONTACT_IDENTIFIER = Utils.get("eea.sensor.contact.id");
 
     private EEAStation station;
     
@@ -147,27 +173,25 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
     }
 
     /**
-     * @param station
      * @param systemType
      */
     protected void buildContact(SystemType systemType) {
         Contact contact = systemType.addNewContact();
 
         ResponsibleParty rp = contact.addNewResponsibleParty();
-        rp.setId("WWU_ifgi_AirBase_contact");
-        rp.setIndividualName("Christian Autermann");
-        rp.setOrganizationName("Institute for Geoinformatics - Westfaelische Wilhelms Universitaet Muenster - Sensor Web and Simulation Lab");
+        rp.setId(CONTACT_IDENTIFIER);
+        rp.setIndividualName(CONTACT_INDIVIDUAL_NAME);
+        rp.setOrganizationName(CONTACT_ORGANIZATION_NAME);
         ContactInfo ci = rp.addNewContactInfo();
         Address a = ci.addNewAddress();
-        a.setCity("Münster");
-        a.setPostalCode("48151");
-        a.setCountry("Germany");
-        a.setElectronicMailAddress("autermann@uni-muenster.de");
-        a.setDeliveryPointArray(new String[] {"Weseler Straße 253"});
+        a.setCity(CONTACT_CITY);
+        a.setPostalCode(CONTACT_POSTAL_CODE);
+        a.setCountry(CONTACT_COUNTRY);
+        a.setElectronicMailAddress(CONTACT_EMAIL_ADDRESS);
+        a.setDeliveryPointArray(new String[] { CONTACT_DELIVERY_POINT });
     }
 
     /**
-     * @param station
      * @param systemType
      */
     protected void buildClassification(SystemType systemType) {
@@ -178,21 +202,21 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
         Classifier classifierIA = classifierList.addNewClassifier();
         classifierIA.setName(CLASSIFIER_NAME_INTENDED_APPLICATION);
         Term termIA = classifierIA.addNewTerm();
-        termIA.setDefinition(Utils.get("eea.urn.classifier.application"));
-        termIA.setValue(Utils.get("eea.sensor.intendedApplication"));
+        termIA.setDefinition(CLASSIFIER_DEFINITION_INTENDED_APPLICATION);
+        termIA.setValue(CLASSIFIER_VALUE_INTENDED_APPLICATION);
 
         // sensor type (OGC)
         Classifier classifierST = classifierList.addNewClassifier();
         classifierST.setName(CLASSIFIER_NAME_SENSOR_TYPE);
         Term termST = classifierST.addNewTerm();
-        termST.setDefinition(Utils.get("eea.urn.classifier.sensorType"));
+        termST.setDefinition(CLASSIFIER_DEFINITION_SENSOR_TYPE);
         termST.setValue(getStation().getType());
 
         // type of sensor (EEA)
         Classifier classifierTS = classifierList.addNewClassifier();
         classifierTS.setName(CLASSIFIER_NAME_TYPE_OF_SENSOR);
         Term termTS = classifierTS.addNewTerm();
-        termTS.setDefinition(Utils.get("eea.urn.classifier.typeOfSensor"));
+        termTS.setDefinition(CLASSIFIER_DEFINITION_TYPE_OF_SENSOR);
         termTS.setValue(getStation().getType());
         
         // ozone classification
@@ -200,7 +224,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             Classifier classifierOzone = classifierList.addNewClassifier();
             classifierOzone.setName(CLASSIFIER_NAME_OZONE);
             Term termOzone = classifierOzone.addNewTerm();
-            termOzone.setDefinition(Utils.get("eea.urn.classifier.ozone"));
+            termOzone.setDefinition(CLASSIFIER_DEFINITION_OZONE);
             termOzone.setValue(getStation().getOzoneClassification().trim());
         }
 
@@ -209,7 +233,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             Classifier classifier = classifierList.addNewClassifier();
             classifier.setName(CLASSIFIER_NAME_AREA_TYPE);
             Term term = classifier.addNewTerm();
-            term.setDefinition(Utils.get("eea.urn.classifier.area"));
+            term.setDefinition(CLASSIFIER_DEFINITION_AREA_TYPE);
             term.setValue(getStation().getTypeOfArea().trim());
         }
 
@@ -218,7 +242,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             Classifier classifier = classifierList.addNewClassifier();
             classifier.setName(CLASSIFIER_NAME_SUBCAT_RURAL);
             Term term = classifier.addNewTerm();
-            term.setDefinition(Utils.get("eea.urn.classifier.rural"));
+            term.setDefinition(CLASSIFIER_DEFINITION_SUBCAT_RURAL);
             term.setValue(getStation().getSubcatRuralBack().trim());
         }
 
@@ -269,17 +293,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             output.setName(name);
             Quantity quantity = output.addNewQuantity();
             quantity.setDefinition(getPhenomenonId(configuration.getComponentCode()));
-            MetaDataPropertyType metaDataProperty = quantity.addNewMetaDataProperty();
-
-            /* offering */
-            XmlCursor cursor = metaDataProperty.newCursor();
-            cursor.toNextToken();
-            cursor.beginElement(ELEMENT_NAME_OFFERING);
-            cursor.insertElementWithText(ELEMENT_NAME_ID, name);
-            cursor.insertElementWithText(ELEMENT_NAME_NAME, name);
-
             quantity.addNewDescription().setStringValue(configuration.getComponentName());
-
             quantity.addNewUom().setCode(configuration.getMeasurementUnit().replace(' ', '_'));
         }
     }
@@ -320,8 +334,9 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
     }
 
     protected void buildDescription(SystemType systemType) {
-        systemType.addNewDescription().setStringValue(Utils.get("eea.sensor.descriptionPrefix").trim() + " "
-                + getStation().getCountryName());
+        systemType.addNewDescription().setStringValue(String.format(SENSOR_DESCRIPTION,
+                                                                    getStation().getEuropeanCode(),
+                                                                    getStation().getCountryName()));
     }
 
     protected void buildKeywords(SystemType systemType) {
@@ -347,55 +362,55 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
         AbstractDataRecordType abstractDataRecord = capabilities.addNewAbstractDataRecord();
         DataRecordType dataRecord = (DataRecordType) abstractDataRecord.substitute(SOSNamespaceUtils.QN_SWE_1_0_1_DATA_RECORD,
                                                                                    DataRecordType.type);
-        dataRecord.setDefinition(Utils.get("eea.urn.definition.caps"));
+        dataRecord.setDefinition(CAPABILITIES_DEFINITION);
         DataComponentPropertyType field_bbox = dataRecord.addNewField();
-        field_bbox.setName(FIELD_NAME_BBOX);
+        field_bbox.setName(BBOX_FIELD_NAME);
 
         // status field
         DataComponentPropertyType statusField = dataRecord.addNewField();
-        statusField.setName(FIELD_NAME_STATUS);
+        statusField.setName(STATUS_FIELD_NAME);
         net.opengis.swe.x101.BooleanDocument.Boolean  statusBoolean = statusField.addNewBoolean();
-        statusBoolean.setDefinition(Utils.get("eea.urn.definition.status"));
+        statusBoolean.setDefinition(STATUS_DEFINITION);
         statusBoolean.setValue(getStation().getEndDate().trim().isEmpty());
 
         // emep field
         DataComponentPropertyType emepField = dataRecord.addNewField();
-        emepField.setName(FIELD_NAME_EMEP);
+        emepField.setName(EMEP_STATION_FIELD_NAME);
         Text emepText = emepField.addNewText();
-        emepText.setDefinition(Utils.get("eea.urn.definition.emepstation"));
+        emepText.setDefinition(EMEP_STATION_DEFINITION);
         emepText.setValue(getStation().getEMEPStation().trim());
 
         // local code field
         DataComponentPropertyType localCodeField = dataRecord.addNewField();
-        localCodeField.setName(FIELD_NAME_LOCAL_CODE);
+        localCodeField.setName(STATION_LOCAL_CODE_FIELD_NAME);
         Text localCodeText = localCodeField.addNewText();
-        localCodeText.setDefinition(Utils.get("eea.urn.definition.station_local_code"));
+        localCodeText.setDefinition(STATION_LOCAL_CODE_DEFINITION);
         localCodeText.setValue(getStation().getLocalCode().trim());
 
         // lau_level1_code
         if ( !getStation().getLauLevel1Code().trim().isEmpty()) {
             DataComponentPropertyType lau1CodeField = dataRecord.addNewField();
-            lau1CodeField.setName(FIELD_NAME_LAU1_CODE);
+            lau1CodeField.setName(LAU_LEVEL1_CODE_FIELD_NAME);
             Text text = lau1CodeField.addNewText();
-            text.setDefinition(Utils.get("eea.urn.definition.lau_level1_code"));
+            text.setDefinition(LAU_LEVEL1_CODE_DEFINITION);
             text.setValue(getStation().getLauLevel1Code().trim());
         }
 
         // lau_level2_code
         if ( !getStation().getLauLevel2Code().trim().isEmpty()) {
             DataComponentPropertyType lau2CodeField = dataRecord.addNewField();
-            lau2CodeField.setName(FIELD_NAME_LAU2_CODE);
+            lau2CodeField.setName(LAU_LEVEL2_CODE_FIELD_NAME);
             Text text = lau2CodeField.addNewText();
-            text.setDefinition(Utils.get("eea.urn.definition.lau_level2_code"));
+            text.setDefinition(LAU_LEVEL2_CODE_DEFINITION);
             text.setValue(getStation().getLauLevel2Code().trim());
         }
 
         // lau_level2_name
         if ( !getStation().getLauLevel2Name().trim().isEmpty()) {
             DataComponentPropertyType lau2NameField = dataRecord.addNewField();
-            lau2NameField.setName(FIELD_NAME_LAU2_NAME);
+            lau2NameField.setName(LAU_LEVEL2_NAME_FIELD_NAME);
             Text text = lau2NameField.addNewText();
-            text.setDefinition(Utils.get("eea.urn.definition.lau_level2_name"));
+            text.setDefinition(LAU_LEVEL2_NAME_DEFINITION);
             text.setValue(getStation().getLauLevel2Name().trim());
         }
 
@@ -406,7 +421,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
                                                   Double.parseDouble(getStation().getLongitude())};
 
         EnvelopeType envelope = EnvelopeType.Factory.newInstance();
-        envelope.setDefinition(Utils.get("eea.urn.definition.bbox"));
+        envelope.setDefinition(BBOX_DEFINITION);
         envelope.setReferenceFrame(EPSG_4326_REFERENCE_SYSTEM_DEFINITION);
        
         VectorPropertyType lowerCorner = envelope.addNewLowerCorner();
