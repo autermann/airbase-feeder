@@ -86,14 +86,8 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
     }
 	
     public static String getOfferingIdentifier(EEAStation station) {
-        String stationId = getStationId(station);
-        StringBuilder sb = new StringBuilder(stationId);
-        if (stationId.startsWith("urn:")) {
-            sb.append(':');
-        } else {
-            sb.append('/');
-        }
-        return sb.append("observations").toString();
+        /* SOS does not accept URN's as offering identifieres.............. */
+        return String.format("Offering_%s", station.getEuropeanCode());
     }
 
     public static String getOfferingName(EEAStation station) {
@@ -131,14 +125,9 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
     }
 
     protected String getResultTemplateIdentifier(EEAStation station, EEAConfiguration configuration) {
-        String procedure = getStationId(station);
-        boolean urn = procedure.startsWith("urn:");
-        return new StringBuilder(procedure)
-                .append(urn ? ':' : '/')
-                .append("resultTemplate")
-                .append(urn ? ':' : '/')
-                .append(getNameForComponent(configuration.getComponentCode()))
-                .toString();
+        return String.format("ResultTemplate_%s-%s",
+                             station.getEuropeanCode(),
+                             getNameForComponent(configuration.getComponentCode()));
     }
     
     

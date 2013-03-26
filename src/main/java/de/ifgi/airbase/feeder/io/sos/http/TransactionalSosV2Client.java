@@ -1,5 +1,14 @@
 package de.ifgi.airbase.feeder.io.sos.http;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import net.opengis.sos.x20.InsertResultTemplateDocument;
+import net.opengis.swes.x20.InsertSensorDocument;
+
 import de.ifgi.airbase.feeder.Configuration;
 import de.ifgi.airbase.feeder.data.EEAConfiguration;
 import de.ifgi.airbase.feeder.data.EEAMeasurement;
@@ -12,13 +21,6 @@ import de.ifgi.airbase.feeder.io.sos.http.xml.InsertSensorRequestBuilder;
 import de.ifgi.airbase.feeder.io.sos.http.xml.SensorDescriptionBuilder;
 import de.ifgi.airbase.feeder.io.sos.http.xml.SoapRequestBuilder;
 import de.ifgi.airbase.feeder.util.Utils;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import net.opengis.sos.x20.InsertResultTemplateDocument;
-import net.opengis.swes.x20.InsertSensorDocument;
 
 /**
  * @author Christian Autermann <c.autermann@52north.org>
