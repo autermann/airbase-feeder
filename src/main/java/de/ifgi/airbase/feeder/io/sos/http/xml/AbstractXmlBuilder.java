@@ -128,8 +128,11 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
 
     protected String getResultTemplateIdentifier(EEAStation station, EEAConfiguration configuration) {
         String procedure = getStationId(station);
+        boolean urn = procedure.startsWith("urn:");
         return new StringBuilder(procedure)
-                .append("/resultTemplate/")
+                .append(urn ? ':' : '/')
+                .append("resultTemplate")
+                .append(urn ? ':' : '/')
                 .append(getNameForComponent(configuration.getComponentCode()))
                 .toString();
     }
