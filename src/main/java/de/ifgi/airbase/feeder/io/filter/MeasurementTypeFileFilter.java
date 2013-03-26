@@ -35,8 +35,9 @@ public class MeasurementTypeFileFilter implements FileFilter {
 	 */
 	@Override
 	public boolean accept(File pathname) {
-		if (pathname.isDirectory())
-			return false;
+		if (pathname.isDirectory()) {
+            return false;
+        }
         return this.types.contains(EEAMeasurementType.getValue(pathname
         		.getName().split("\\.")[0].substring(17)));
 	}
