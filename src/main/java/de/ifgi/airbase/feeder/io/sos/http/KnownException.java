@@ -21,7 +21,8 @@ enum KnownException {
     OBSERVATION_ALREADY_REGISTERED("Observation already registered.", false,
                                    ".*FEHLER: doppelter Schlüsselwert verletzt Unique-Constraint.*"),
     RESULT_TEMPLATE_ALREADY_REGISTERED("ResultTemplate already registered.", false,
-                                       ".*The requested template identifier (.*) still contains in this service!.*");
+                                       ".*The requested template identifier (.*) still contains in this service!.*",
+                                       ".*The requested resultTemplate identifier (.*) is already registered at this service.*");
     private List<Pattern> pattern;
     private String message;
     private boolean shouldFail;

@@ -125,7 +125,7 @@ public abstract class AbstractXmlBuilder<T extends XmlObject> {
     }
 
     protected String getResultTemplateIdentifier(EEAStation station, EEAConfiguration configuration) {
-        return String.format("ResultTemplate_%s-%s",
+        return String.format("ResultTemplate_%s_%s",
                              station.getEuropeanCode(),
                              getNameForComponent(configuration.getComponentCode()));
     }
