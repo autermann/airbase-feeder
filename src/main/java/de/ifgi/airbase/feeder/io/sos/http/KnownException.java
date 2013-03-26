@@ -12,18 +12,17 @@ import java.util.regex.Pattern;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
- enum KnownException {
-    SENSOR_ALREADY_REGISTERED("Station already registered.", false, 
-            ".*The offering with the identifier '(.*)' still exists in this service and it is not allowed to insert more than one procedure to an offering!.*", 
-            ".*Sensor with ID: .* is already registered at this SOS!", "The requested offering identifier (.*) is already provided by this server!.*"), 
-    OBSERVATION_ALREADY_REGISTERED("Observation already registered.", false, 
-            ".*FEHLER: doppelter Schlüsselwert verletzt Unique-Constraint.*"), 
-    RESULT_TEMPLATE_ALREADY_REGISTERED("ResultTemplate already registered.", false, 
-            ".*The requested template identifier (.*) still contains in this service!.*");
-
+enum KnownException {
+    SENSOR_ALREADY_REGISTERED("Station already registered.", false,
+                              ".*The offering with the identifier '(.*)' still exists in this service and it is not allowed to insert more than one procedure to an offering!.*",
+                              ".*Sensor with ID: .* is already registered at this SOS!",
+                              "The requested offering identifier (.*) is already provided by this server!.*",
+                              ".*The offering with the identifier '.*' still exists in this service.*"),
+    OBSERVATION_ALREADY_REGISTERED("Observation already registered.", false,
+                                   ".*FEHLER: doppelter Schlüsselwert verletzt Unique-Constraint.*"),
+    RESULT_TEMPLATE_ALREADY_REGISTERED("ResultTemplate already registered.", false,
+                                       ".*The requested template identifier (.*) still contains in this service!.*");
     private List<Pattern> pattern;
-
-    
     private String message;
     private boolean shouldFail;
 

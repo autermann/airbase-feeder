@@ -4,12 +4,6 @@
  */
 package de.ifgi.airbase.feeder.io.sos.http;
 // <editor-fold defaultstate="collapsed" desc="Imports">
-import de.ifgi.airbase.feeder.Configuration;
-import de.ifgi.airbase.feeder.data.EEAMeasurement;
-import de.ifgi.airbase.feeder.data.EEARawDataFile;
-import de.ifgi.airbase.feeder.io.filter.TimeRangeFilter;
-import de.ifgi.airbase.feeder.io.sos.SosClient;
-import de.ifgi.airbase.feeder.util.Utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -23,7 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
@@ -35,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import net.opengis.ows.x11.ExceptionDocument;
 import net.opengis.ows.x11.ExceptionReportDocument;
 import net.opengis.ows.x11.ExceptionType;
@@ -43,6 +38,7 @@ import net.opengis.sos.x10.RegisterSensorResponseDocument;
 import net.opengis.sos.x20.InsertResultResponseDocument;
 import net.opengis.sos.x20.InsertResultTemplateResponseDocument;
 import net.opengis.swes.x20.InsertSensorResponseDocument;
+
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -50,6 +46,13 @@ import org.w3.x2003.x05.soapEnvelope.Body;
 import org.w3.x2003.x05.soapEnvelope.EnvelopeDocument;
 import org.w3.x2003.x05.soapEnvelope.FaultDocument;
 import org.w3c.dom.Node;
+
+import de.ifgi.airbase.feeder.Configuration;
+import de.ifgi.airbase.feeder.data.EEAMeasurement;
+import de.ifgi.airbase.feeder.data.EEARawDataFile;
+import de.ifgi.airbase.feeder.io.filter.TimeRangeFilter;
+import de.ifgi.airbase.feeder.io.sos.SosClient;
+import de.ifgi.airbase.feeder.util.Utils;
 // </editor-fold>
 /**
  *
@@ -84,7 +87,12 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
     }
 
     protected boolean processExceptionDocument(XmlObject xml) {
-        ExceptionType exceptionType = ((ExceptionDocument) xml).getException();
+        ExceptionType exceptionType;
+        if (xml instanceof ExceptionDocument) {
+            exceptionType = ((ExceptionDocument) xml).getException();
+        } else {
+            exceptionType = (ExceptionType) xml;
+        }
         StringBuilder sb = new StringBuilder();
         for (String s : exceptionType.getExceptionTextArray()) {
             KnownException ke = KnownException.fromErrorMessage(s);
@@ -102,7 +110,7 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
 
     protected boolean processExceptionReportDocument(XmlObject xml) throws IOException {
         for (ExceptionType exceptionReport : ((ExceptionReportDocument) xml).getExceptionReport().getExceptionArray()) {
-            if (!processResponse(exceptionReport.newInputStream())) {
+            if (!processExceptionDocument(exceptionReport)) {
                 return false;
             }
         }
