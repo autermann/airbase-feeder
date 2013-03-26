@@ -136,7 +136,13 @@ public class EEAConfiguration {
 	/**
 	 * @return the measurementUnit
 	 */
-	public String getMeasurementUnit() {
+    public String getMeasurementUnit() {
+        // ugly hack due to swe:UomSymbols regex '[^: \n\r\t]+'
+        if (this.measurementUnit != null) {
+            if (this.measurementUnit.equals("µg NO2/m3")) {
+                this.measurementUnit = "µg/m3";
+            }
+        }
 		return this.measurementUnit;
 	}
 
