@@ -16,9 +16,9 @@ public class CompositeFileFilter implements FileFilter {
 		}
 	}
 	
-	
-	public void addFilter(FileFilter f) {
+	public CompositeFileFilter addFilter(FileFilter f) {
 		this.ff.add(f);
+        return this;
 	}
 
 	@Override
