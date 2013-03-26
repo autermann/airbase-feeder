@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:DescribeSensorResponse xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.opengis.net/swes/2.0 http://schemas.opengis.net/swes/2.0/swes.xsd">
+  <swes:procedureDescriptionFormat>http://www.opengis.net/sensorML/1.0.1</swes:procedureDescriptionFormat>
+  <swes:description>
+    <swes:SensorDescription>
+      <swes:data>
+        <sml:SensorML xmlns:sml="http://www.opengis.net/sensorML/1.0.1" version="1.0.1">
+          <sml:member>
+            <sml:System>
+              <gml:description>Sensor 'FR17016' of the European air quality database 'AirBase' in FRANCE</gml:description>
+              <sml:keywords>
+                <sml:KeywordList>
+                  <sml:keyword>LONS-LE-SAUNIER</sml:keyword>
+                  <sml:keyword>FRANCE</sml:keyword>
+                  <sml:keyword>FR</sml:keyword>
+                  <sml:keyword>AIRBASE</sml:keyword>
+                  <sml:keyword>AIRQUALITY</sml:keyword>
+                  <sml:keyword>EEA</sml:keyword>
+                </sml:KeywordList>
+              </sml:keywords>
+              <sml:identification>
+                <sml:IdentifierList>
+                  <sml:identifier name="">
+                    <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:uniqueID">
+                      <sml:value>urn:ogc:object:feature:Sensor:EEA:airbase:7.0:FR17016</sml:value>
+                    </sml:Term>
+                  </sml:identifier>
+                  <sml:identifier name="">
+                    <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:longName">
+                      <sml:value>Lons-le-Saunier CV</sml:value>
+                    </sml:Term>
+                  </sml:identifier>
+                  <sml:identifier name="">
+                    <sml:Term definition="urn:ogc:def:identifier:OGC:1.0:shortName">
+                      <sml:value>Lons-le-Saunier CV</sml:value>
+                    </sml:Term>
+                  </sml:identifier>
+                  <sml:identifier name="FR17016">
+                    <sml:Term definition="urn:ogc:def:identifier:OGC:offeringID">
+                      <sml:value>Offering_FR17016</sml:value>
+                    </sml:Term>
+                  </sml:identifier>
+                </sml:IdentifierList>
+              </sml:identification>
+              <sml:classification>
+                <sml:ClassifierList>
+                  <sml:classifier name="intendedApplication">
+                    <sml:Term>
+                      <sml:value>air quality</sml:value>
+                    </sml:Term>
+                  </sml:classifier>
+                  <sml:classifier name="sensorType">
+                    <sml:Term>
+                      <sml:value>Background</sml:value>
+                    </sml:Term>
+                  </sml:classifier>
+                  <sml:classifier name="typeOfSensor">
+                    <sml:Term>
+                      <sml:value>Background</sml:value>
+                    </sml:Term>
+                  </sml:classifier>
+                  <sml:classifier name="stationAreaType">
+                    <sml:Term>
+                      <sml:value>urban</sml:value>
+                    </sml:Term>
+                  </sml:classifier>
+                </sml:ClassifierList>
+              </sml:classification>
+              <sml:validTime>
+                <gml:TimePeriod>
+                  <gml:beginPosition>2001-06-25</gml:beginPosition>
+                  <gml:endPosition>2013-03-26</gml:endPosition>
+                </gml:TimePeriod>
+              </sml:validTime>
+              <sml:capabilities>
+                <swe:DataRecord definition="urn:ogc:def:property:capabilities">
+                  <swe:field name="observedBBOX">
+                    <swe:Envelope definition="urn:ogc:def:property:OGC:1.0:observedBBOX" referenceFrame="http://www.opengis.net/def/crs/EPSG/0/4326">
+                      <swe:lowerCorner>
+                        <swe:Vector>
+                          <swe:coordinate name="easting">
+                            <swe:Quantity axisID="y">
+                              <swe:uom code="degree"/>
+                              <swe:value>46.671306</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                          <swe:coordinate name="northing">
+                            <swe:Quantity axisID="x">
+                              <swe:uom code="degree"/>
+                              <swe:value>5.556806</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                        </swe:Vector>
+                      </swe:lowerCorner>
+                      <swe:upperCorner>
+                        <swe:Vector>
+                          <swe:coordinate name="easting">
+                            <swe:Quantity axisID="y">
+                              <swe:uom code="degree"/>
+                              <swe:value>46.671306</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                          <swe:coordinate name="northing">
+                            <swe:Quantity axisID="x">
+                              <swe:uom code="degree"/>
+                              <swe:value>5.556806</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                        </swe:Vector>
+                      </swe:upperCorner>
+                    </swe:Envelope>
+                  </swe:field>
+                  <swe:field name="status">
+                    <swe:Boolean definition="urn:ogc:def:property:OGC:1.0:isActive">
+                      <swe:value>true</swe:value>
+                    </swe:Boolean>
+                  </swe:field>
+                  <swe:field name="EMEP_station">
+                    <swe:Text definition="">
+                      <swe:value>no</swe:value>
+                    </swe:Text>
+                  </swe:field>
+                  <swe:field name="station_local_code">
+                    <swe:Text definition="">
+                      <swe:value>FR17016</swe:value>
+                    </swe:Text>
+                  </swe:field>
+                  <swe:field name="lau_level1_code">
+                    <swe:Text definition="">
+                      <swe:value>3997</swe:value>
+                    </swe:Text>
+                  </swe:field>
+                  <swe:field name="lau_level2_name">
+                    <swe:Text definition="">
+                      <swe:value>Lons-le-Saunier</swe:value>
+                    </swe:Text>
+                  </swe:field>
+                </swe:DataRecord>
+              </sml:capabilities>
+              <sml:capabilities>
+                <swe:DataRecord>
+                  <swe:field name="observedBBOX">
+                    <swe:Envelope definition="urn:ogc:def:property:OGC:1.0:observedBBOX" referenceFrame="http://www.opengis.net/def/crs/EPSG/0/4326">
+                      <swe:lowerCorner>
+                        <swe:Vector>
+                          <swe:coordinate name="easting">
+                            <swe:Quantity axisID="y">
+                              <swe:uom code="degree"/>
+                              <swe:value>46.671306</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                          <swe:coordinate name="northing">
+                            <swe:Quantity axisID="x">
+                              <swe:uom code="degree"/>
+                              <swe:value>5.556806</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                        </swe:Vector>
+                      </swe:lowerCorner>
+                      <swe:upperCorner>
+                        <swe:Vector>
+                          <swe:coordinate name="easting">
+                            <swe:Quantity axisID="y">
+                              <swe:uom code="degree"/>
+                              <swe:value>46.671306</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                          <swe:coordinate name="northing">
+                            <swe:Quantity axisID="x">
+                              <swe:uom code="degree"/>
+                              <swe:value>5.556806</swe:value>
+                            </swe:Quantity>
+                          </swe:coordinate>
+                        </swe:Vector>
+                      </swe:upperCorner>
+                    </swe:Envelope>
+                  </swe:field>
+                  <swe:field definition="urn:ogc:def:property:OGC:1.0:isActive" name="status">
+                    <swe:value>true</swe:value>
+                  </swe:field>
+                  <swe:field name="EMEP_station">
+                    <swe:value>no</swe:value>
+                  </swe:field>
+                  <swe:field name="station_local_code">
+                    <swe:value>FR17016</swe:value>
+                  </swe:field>
+                  <swe:field name="lau_level1_code">
+                    <swe:value>3997</swe:value>
+                  </swe:field>
+                  <swe:field name="lau_level2_name">
+                    <swe:value>Lons-le-Saunier</swe:value>
+                  </swe:field>
+                </swe:DataRecord>
+              </sml:capabilities>
+              <sml:capabilities name="featureOfInterest">
+                <swe:SimpleDataRecord>
+                  <swe:field definition="FeatureOfInterest identifier">
+                    <swe:value>foi_FR17016</swe:value>
+                  </swe:field>
+                </swe:SimpleDataRecord>
+              </sml:capabilities>
+              <sml:contact>
+                <sml:ResponsibleParty gml:id="WWU_ifgi_AirBase_contact">
+                  <sml:individualName>Christian Autermann</sml:individualName>
+                  <sml:organizationName>Institute for Geoinformatics - Westfaelische Wilhelms Universitaet Muenster - Sensor Web and Simulation Lab</sml:organizationName>
+                  <sml:contactInfo>
+                    <sml:address>
+                      <sml:deliveryPoint>Weseler Straße 253</sml:deliveryPoint>
+                      <sml:city>Münster</sml:city>
+                      <sml:postalCode>48151</sml:postalCode>
+                      <sml:country>Germany</sml:country>
+                      <sml:electronicMailAddress>autermann@uni-muenster.de</sml:electronicMailAddress>
+                    </sml:address>
+                  </sml:contactInfo>
+                </sml:ResponsibleParty>
+              </sml:contact>
+              <sml:position name="FR17016">
+                <swe:Position fixed="false" referenceFrame="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <swe:location>
+                    <swe:Vector>
+                      <swe:coordinate name="easting">
+                        <swe:Quantity axisID="y">
+                          <swe:uom code="degree"/>
+                          <swe:value>46.671306</swe:value>
+                        </swe:Quantity>
+                      </swe:coordinate>
+                      <swe:coordinate name="northing">
+                        <swe:Quantity axisID="x">
+                          <swe:uom code="degree"/>
+                          <swe:value>5.556806</swe:value>
+                        </swe:Quantity>
+                      </swe:coordinate>
+                      <swe:coordinate name="altitude">
+                        <swe:Quantity axisID="z">
+                          <swe:uom code="m"/>
+                          <swe:value>261.0</swe:value>
+                        </swe:Quantity>
+                      </swe:coordinate>
+                    </swe:Vector>
+                  </swe:location>
+                </swe:Position>
+              </sml:position>
+              <sml:inputs>
+                <sml:InputList>
+                  <sml:input name="Nitrogen dioxide (air)">
+                    <swe:Text definition="urn:ogc:def:property:EEA:airbase:7.0:componentCode:8"/>
+                  </sml:input>
+                  <sml:input name="Nitrogen oxides (air)">
+                    <swe:Text definition="urn:ogc:def:property:EEA:airbase:7.0:componentCode:9"/>
+                  </sml:input>
+                  <sml:input name="Nitrogen monoxide (air)">
+                    <swe:Text definition="urn:ogc:def:property:EEA:airbase:7.0:componentCode:38"/>
+                  </sml:input>
+                  <sml:input name="Particulate matter &lt; 10 µm (aerosol)">
+                    <swe:Text definition="urn:ogc:def:property:EEA:airbase:7.0:componentCode:5"/>
+                  </sml:input>
+                  <sml:input name="Ozone (air)">
+                    <swe:Text definition="urn:ogc:def:property:EEA:airbase:7.0:componentCode:7"/>
+                  </sml:input>
+                </sml:InputList>
+              </sml:inputs>
+              <sml:outputs>
+                <sml:OutputList>
+                  <sml:output name="NO2">
+                    <swe:Quantity definition="http://dd.eionet.europa.eu/vocabulary/aq/pollutant/8">
+                      <gml:description>Nitrogen dioxide (air)</gml:description>
+                      <swe:uom code="µg/m3"/>
+                    </swe:Quantity>
+                  </sml:output>
+                  <sml:output name="NOX">
+                    <swe:Quantity definition="http://dd.eionet.europa.eu/vocabulary/aq/pollutant/9">
+                      <gml:description>Nitrogen oxides (air)</gml:description>
+                      <swe:uom code="µg/m3"/>
+                    </swe:Quantity>
+                  </sml:output>
+                  <sml:output name="NO">
+                    <swe:Quantity definition="http://dd.eionet.europa.eu/vocabulary/aq/pollutant/38">
+                      <gml:description>Nitrogen monoxide (air)</gml:description>
+                      <swe:uom code="µg/m3"/>
+                    </swe:Quantity>
+                  </sml:output>
+                  <sml:output name="PM10">
+                    <swe:Quantity definition="http://dd.eionet.europa.eu/vocabulary/aq/pollutant/5">
+                      <gml:description>Particulate matter &lt; 10 µm (aerosol)</gml:description>
+                      <swe:uom code="µg/m3"/>
+                    </swe:Quantity>
+                  </sml:output>
+                  <sml:output name="03">
+                    <swe:Quantity definition="http://dd.eionet.europa.eu/vocabulary/aq/pollutant/7">
+                      <gml:description>Ozone (air)</gml:description>
+                      <swe:uom code="µg/m3"/>
+                    </swe:Quantity>
+                  </sml:output>
+                </sml:OutputList>
+              </sml:outputs>
+            </sml:System>
+          </sml:member>
+        </sml:SensorML>
+      </swes:data>
+    </swes:SensorDescription>
+  </swes:description>
+</swes:DescribeSensorResponse>
