@@ -1,6 +1,8 @@
 
 package de.ifgi.airbase.feeder.io.sos.http.xml;
 
+import static java.lang.String.format;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -71,14 +73,11 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
     private static final String CLASSIFIER_NAME_OZONE = "stationOzoneType";
     private static final String CLASSIFIER_DEFINITION_OZONE = Utils.get("eea.def.classifier.ozone");
     private static final String CLASSIFIER_NAME_AREA_TYPE = "stationAreaType";
-    private static final String CLASSIFIER_DEFINITION_AREA_TYPE = Utils.get("eea.def.classifier.area");
+    private static final String CLASSIFIER_DEFINITION_AREA_TYPE = Utils.get("eea.def.classifier.areaType");
     private static final String CLASSIFIER_NAME_SUBCAT_RURAL = "stationSubCatRural";
     private static final String CLASSIFIER_DEFINITION_SUBCAT_RURAL = Utils.get("eea.def.classifier.rural");
     private static final String CLASSIFIER_NAME_STREET_TYPE = "streetType";
     private static final String CLASSIFIER_DEFINITION_STREET = Utils.get("eea.def.classifier.street");
-    
-    
-    
     
     private static final String BBOX_FIELD_NAME = "observedBBOX";
     private static final String BBOX_DEFINITION = Utils.get("eea.def.bbox");
@@ -106,9 +105,12 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
     private static final String CONTACT_EMAIL_ADDRESS = Utils.get("eea.sensor.contact.email");
     private static final String CONTACT_DELIVERY_POINT = Utils.get("eea.sensor.contact.deliveryPoint");
     private static final String CONTACT_IDENTIFIER = Utils.get("eea.sensor.contact.id");
-
+    private static final String SHORT_NAME_NAME = "shortName";
+    private static final String LONG_NAME_NAME = "longName";
+    private static final String UNIQUE_ID_NAME = "uniqueId";
     private EEAStation station;
-    
+
+
     protected EEAStation getStation() {
         return station;
     }
@@ -152,16 +154,19 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
         IdentifierList idenList = system.addNewIdentification().addNewIdentifierList();
 
         Identifier ident = idenList.addNewIdentifier();
+        ident.setName(UNIQUE_ID_NAME);
         Term term = ident.addNewTerm();
         term.setDefinition(UNIQUE_ID_DEFINITION);
         term.setValue(getStationId(getStation()));
 
         ident = idenList.addNewIdentifier();
+        ident.setName(LONG_NAME_NAME);
         term = ident.addNewTerm();
         term.setDefinition(LONG_NAME_DEFINITION);
         term.setValue(escapeCharacters(getStation().getName()));
 
         ident = idenList.addNewIdentifier();
+        ident.setName(SHORT_NAME_NAME);
         term = ident.addNewTerm();
         term.setDefinition(SHORT_NAME_DEFINITION);
         term.setValue(getStation().getName());
@@ -235,7 +240,7 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             classifier.setName(CLASSIFIER_NAME_AREA_TYPE);
             Term term = classifier.addNewTerm();
             term.setDefinition(CLASSIFIER_DEFINITION_AREA_TYPE);
-            term.setValue(getStation().getTypeOfArea().trim());
+            term.setValue(getDefinitionForAreaType(station));
         }
 
         // station subcategory type
@@ -255,6 +260,14 @@ public class SensorDescriptionBuilder extends AbstractXmlBuilder<SensorMLDocumen
             term.setDefinition(CLASSIFIER_DEFINITION_STREET);
             term.setValue(escapeCharacters(getStation().getStreetType().trim()));
         }
+    }
+
+    private String getDefinitionForAreaType(EEAStation station) {
+        String def = Utils.get(format("eea.def.classifier.areaType.%s", station.getTypeOfArea().trim()));
+        if (def == null || def.isEmpty()) {
+            def = station.getTypeOfArea().trim();
+        }
+        return def;
     }
 
     /**
