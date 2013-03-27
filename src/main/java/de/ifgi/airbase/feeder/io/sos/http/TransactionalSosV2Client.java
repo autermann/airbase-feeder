@@ -6,8 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.opengis.sensorML.x101.SensorMLDocument;
 import net.opengis.sos.x20.InsertResultTemplateDocument;
 import net.opengis.swes.x20.InsertSensorDocument;
+import net.opengis.swes.x20.UpdateSensorDescriptionDocument;
 
 import de.ifgi.airbase.feeder.Configuration;
 import de.ifgi.airbase.feeder.data.EEAConfiguration;
@@ -20,6 +22,7 @@ import de.ifgi.airbase.feeder.io.sos.http.xml.InsertResultTemplateRequestBuilder
 import de.ifgi.airbase.feeder.io.sos.http.xml.InsertSensorRequestBuilder;
 import de.ifgi.airbase.feeder.io.sos.http.xml.SensorDescriptionBuilder;
 import de.ifgi.airbase.feeder.io.sos.http.xml.SoapRequestBuilder;
+import de.ifgi.airbase.feeder.io.sos.http.xml.UpdateSensorDescriptionRequestBuilder;
 import de.ifgi.airbase.feeder.util.Utils;
 
 /**
@@ -30,6 +33,7 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
     private static final String INSERT_SENSOR_REQUEST_FILE_PREFIX = "InsertSensor-";
     private static final String INSERT_RESULT_REQUEST_FILE_PREFIX = "InsertResult-";
     private static final String INSERT_RESULT_TEMPLATE_REQUEST_FILE_PREFIX = "InsertResultTemplate-";
+    private static final String UPDATE_SENSOR_DESCRIPTION_FILE_PREFIX = "UpdateSensorDescription-";
     
     @Override
     public void registerStation(EEAStation station) throws IOException, RequestFailedException {
@@ -59,8 +63,9 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
             InputStream in = request(req);
             log.info("Build InsertResulteTemplateRequest for {} in {}; SOS processed it in {}.", new Object[]{
                         station.getEuropeanCode(), buildTime, Utils.timeElapsed(start)});
+            SosException processResponse = processResponse(in);
 
-            if (!processResponse(in)) {
+            if (processResponse != null && processResponse.isFatal()) {
                 String file = printRequest(req,
                         getFailedPath(),
                         INSERT_RESULT_TEMPLATE_REQUEST_FILE_PREFIX,
@@ -76,17 +81,13 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
 
     private void insertSensor(EEAStation station) throws IOException, RequestFailedException {
         try {
-            /*
-             if (isAlreadyRegistered(station.getEuropeanCode())) {
-             log.info("Station is already registered: {}" , station.getEuropeanCode());
-             return;
-             }
-             */
             long start = System.currentTimeMillis();
+            SensorMLDocument build;
             InsertSensorDocument insertSensorDocument;
             try {
+                build = new SensorDescriptionBuilder().setStation(station).build();
                 insertSensorDocument = new InsertSensorRequestBuilder().setStation(station)
-                        .setDescription(new SensorDescriptionBuilder().setStation(station).build()).build();
+                        .setDescription(build).build();
             } catch (EncodingException e) {
                 log.info("Station {} has no valid input/outputs.", station.getEuropeanCode());
                 return;
@@ -97,10 +98,13 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
             InputStream in = request(req);
             log.info("Build RegisterSensor for {} in {}; SOS processed it in {}.", new Object[]{
                 station.getEuropeanCode(), buildTime, Utils.timeElapsed(start)});
-            if (!processResponse(in)) {
+            SosException processResponse = processResponse(in);
+            if (processResponse != null && processResponse.isFatal()) {
                 String file = printRequest(req, getFailedPath(), INSERT_SENSOR_REQUEST_FILE_PREFIX,
                         station.getEuropeanCode(), ".xml");
                 throw new RequestFailedException("Request '" + file + "'  failed.");
+            } else if (processResponse != null && processResponse == SosException.SENSOR_ALREADY_REGISTERED) {
+                updateSensor(station, build);
             }
         } catch (EncodingException ex) {
             log.error("Could not encode InsertSensor request", ex);
@@ -123,8 +127,9 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
                       new Object[] {Integer.valueOf(reqNo), 
                                     file.getStation().getEuropeanCode(),
                                     Utils.timeElapsed(requestStart)});
+            SosException processResponse = processResponse(in);
 
-            if ( !processResponse(in)) {// && PRINT_FAILED_REQUESTS) {
+            if (processResponse != null && processResponse.isFatal()) {
                 String f = printRequest(req, getFailedPath(), INSERT_RESULT_REQUEST_FILE_PREFIX,
                              file.getStation().getEuropeanCode(), "-",
                              String.valueOf(file.getConfiguration().getComponent().getCode()),
@@ -133,6 +138,28 @@ public class TransactionalSosV2Client extends AbstractTransactionalSosClient {
             }
         } catch (EncodingException ex) {
             log.error("Could not encode InsertResult request", ex);
+        }
+    }
+
+    private void updateSensor(EEAStation station, SensorMLDocument build) throws IOException, RequestFailedException {
+        try {
+            long start = System.currentTimeMillis();
+            UpdateSensorDescriptionDocument update =
+                                            new UpdateSensorDescriptionRequestBuilder().setDescription(build).setStation(station).build();
+            String req = new SoapRequestBuilder().setBody(update).asString();
+            printRequest(req, getPath(), UPDATE_SENSOR_DESCRIPTION_FILE_PREFIX, station.getEuropeanCode(), ".xml");
+            String buildTime = Utils.timeElapsed(start);
+            InputStream in = request(req);
+            log.info("Build UpdateSensor for {} in {}; SOS processed it in {}.", new Object[] {
+                station.getEuropeanCode(), buildTime, Utils.timeElapsed(start) });
+            SosException processResponse = processResponse(in);
+            if (processResponse != null && processResponse.isFatal()) {
+                String file = printRequest(req, getFailedPath(), UPDATE_SENSOR_DESCRIPTION_FILE_PREFIX,
+                                           station.getEuropeanCode(), ".xml");
+                throw new RequestFailedException("Request '" + file + "'  failed.");
+            }
+        } catch (EncodingException ex) {
+            log.error("Could not encode InsertSensor request", ex);
         }
     }
 }

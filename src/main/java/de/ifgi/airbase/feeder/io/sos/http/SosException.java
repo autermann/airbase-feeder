@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * @author Christian Autermann <c.autermann@52north.org>
  */
-enum KnownException {
+public enum SosException {
     SENSOR_ALREADY_REGISTERED("Station already registered.", false,
                               ".*The offering with the identifier '(.*)' still exists in this service and it is not allowed to insert more than one procedure to an offering!.*",
                               ".*Sensor with ID: .* is already registered at this SOS!",
@@ -22,12 +22,13 @@ enum KnownException {
                                    ".*FEHLER: doppelter Schlüsselwert verletzt Unique-Constraint.*"),
     RESULT_TEMPLATE_ALREADY_REGISTERED("ResultTemplate already registered.", false,
                                        ".*The requested template identifier (.*) still contains in this service!.*",
-                                       ".*The requested resultTemplate identifier (.*) is already registered at this service.*");
+                                       ".*The requested resultTemplate identifier (.*) is already registered at this service.*"),
+    UNKNOWN("Unknown", true);
     private List<Pattern> pattern;
     private String message;
     private boolean shouldFail;
 
-    private KnownException(String message, boolean shouldFail, String... regex) {
+    private SosException(String message, boolean shouldFail, String... regex) {
         this.shouldFail = shouldFail;
         this.message = message;
         this.pattern = new ArrayList<Pattern>(regex.length);
@@ -57,15 +58,15 @@ enum KnownException {
         return shouldFail;
     }
 
-    public static KnownException fromErrorMessage(String message) {
+    public static SosException fromErrorMessage(String message) {
         if (message != null) {
-            for (KnownException ke : values()) {
+            for (SosException ke : values()) {
                 if (ke.matches(message)) {
                     return ke;
                 }
             }
         }
-        return null;
+        return UNKNOWN;
     }
     
 }

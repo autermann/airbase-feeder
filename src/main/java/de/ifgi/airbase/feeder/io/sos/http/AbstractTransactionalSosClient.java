@@ -38,6 +38,7 @@ import net.opengis.sos.x10.RegisterSensorResponseDocument;
 import net.opengis.sos.x20.InsertResultResponseDocument;
 import net.opengis.sos.x20.InsertResultTemplateResponseDocument;
 import net.opengis.swes.x20.InsertSensorResponseDocument;
+import net.opengis.swes.x20.UpdateSensorDescriptionResponseDocument;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -68,12 +69,12 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
     private String failedPath = Utils.getFailedRequestPrintPath();
     private HttpUrlConnectionClient client;
     
-    protected boolean processInvalidXml(InputStream response) throws IOException {
+    protected SosException processInvalidXml(InputStream response) throws IOException {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(response));
             StringBuilder sb = new StringBuilder();
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 sb.append("\n").append(line);
             }
@@ -83,10 +84,10 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
                 br.close();
             }
         }
-        return false;
+        return SosException.UNKNOWN;
     }
 
-    protected boolean processExceptionDocument(XmlObject xml) {
+    protected SosException processExceptionDocument(XmlObject xml) {
         ExceptionType exceptionType;
         if (xml instanceof ExceptionDocument) {
             exceptionType = ((ExceptionDocument) xml).getException();
@@ -95,64 +96,67 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
         }
         StringBuilder sb = new StringBuilder();
         for (String s : exceptionType.getExceptionTextArray()) {
-            KnownException ke = KnownException.fromErrorMessage(s);
+            SosException ke = SosException.fromErrorMessage(s);
             if (ke != null) {
                 log.info(ke.getMessage());
-                if (!ke.isFatal()) {
-                    return true;
-                }
+                return ke;
             }
             sb.append("\n\t").append(s.trim());
         }
         log.warn("Request failed: {}", sb.toString());
-        return false;
+        return SosException.UNKNOWN;
     }
 
-    protected boolean processExceptionReportDocument(XmlObject xml) throws IOException {
+    protected SosException processExceptionReportDocument(XmlObject xml) throws IOException {
         for (ExceptionType exceptionReport : ((ExceptionReportDocument) xml).getExceptionReport().getExceptionArray()) {
-            if (!processExceptionDocument(exceptionReport)) {
-                return false;
-            }
+            return processExceptionDocument(exceptionReport);
         }
-        return true;
+        return SosException.UNKNOWN;
     }
 
-    protected boolean processInsertObservationResponseDocument(XmlObject xml) {
+    protected SosException processInsertObservationResponseDocument(XmlObject xml) {
         log.info("Inserted Observation; assigned Id: {}",
                 ((InsertObservationResponseDocument) xml).getInsertObservationResponse().getAssignedObservationId());
-        return true;
+        return null;
     }
 
-    protected boolean processRegisterSensorResponseDocument(XmlObject xml) {
+    protected SosException processRegisterSensorResponseDocument(XmlObject xml) {
         log.info("Registered station; assigned Id: {}",
                 ((RegisterSensorResponseDocument) xml).getRegisterSensorResponse().getAssignedSensorId());
-        return true;
+        return null;
     }
 
-    protected boolean processInsertResultTemplateResponseDocument(XmlObject xml) {
+    protected SosException processInsertResultTemplateResponseDocument(XmlObject xml) {
         log.info("Inserted ResultTemplate; assigned Id: {}", ((InsertResultTemplateResponseDocument) xml)
                 .getInsertResultTemplateResponse().getAcceptedTemplate());
-        return true;
+        return null;
     }
 
-    protected boolean processInsertResultResponseDocument(XmlObject xml) {
+    protected SosException processInsertResultResponseDocument(XmlObject xml) {
         log.info("Inserted Result");
-        return true;
+        return null;
     }
 
-    protected boolean processInsertSensorResponseDocument(XmlObject xml) {
+    protected SosException processInsertSensorResponseDocument(XmlObject xml) {
         InsertSensorResponseDocument insertSensorResponseDocument = ((InsertSensorResponseDocument) xml);
         log.info("Registered station; assigned Id: {}, Offering: {}",
                 insertSensorResponseDocument.getInsertSensorResponse().getAssignedProcedure(),
                 insertSensorResponseDocument.getInsertSensorResponse().getAssignedOffering());
-        return true;
+        return null;
     }
 
-    protected boolean processFaultDocument(XmlObject xml) throws IOException {
+    protected SosException processUpdateSensorDescriptionResponseDocument(XmlObject xml) {
+        UpdateSensorDescriptionResponseDocument usdr = ((UpdateSensorDescriptionResponseDocument) xml);
+        log.info("Updated station; id: {}", usdr.getUpdateSensorDescriptionResponse().getUpdatedProcedure());
+        return null;
+    }
+
+
+    protected SosException processFaultDocument(XmlObject xml) throws IOException {
         return processResponse(nodeToInputStream(((FaultDocument)xml).getFault().getDetail().getDomNode().getFirstChild()));
     }
 
-    protected boolean processEnvelopeDocument(XmlObject xml) throws IOException, RuntimeException {
+    protected SosException processEnvelopeDocument(XmlObject xml) throws IOException, RuntimeException {
         try {
             Body body = ((EnvelopeDocument) xml).getEnvelope().getBody();
             SOAPMessage soapMessage = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL)
@@ -261,7 +265,7 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
         }
     }
 
-    protected boolean processResponse(InputStream response) throws IOException {
+    protected SosException processResponse(InputStream response) throws IOException {
         try {
             XmlObject xml = XmlObject.Factory.parse(response, new XmlOptions()
                     .setLoadStripWhitespace().setLoadStripComments().setLoadStripProcinsts());
@@ -271,6 +275,8 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
                 return processFaultDocument(xml);
             } else if (xml instanceof InsertSensorResponseDocument) {
                 return processInsertSensorResponseDocument(xml);
+            } else if (xml instanceof UpdateSensorDescriptionResponseDocument) {
+                return processUpdateSensorDescriptionResponseDocument(xml);
             } else if (xml instanceof InsertResultResponseDocument) {
                 return processInsertResultResponseDocument(xml);
             } else if (xml instanceof InsertResultTemplateResponseDocument) {
@@ -285,7 +291,7 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
                 return processExceptionDocument(xml);
             } else {
                 log.warn("Unable to read Response {}:\n{}",xml.getClass(), xml);
-                return false;
+                return SosException.UNKNOWN;
             }
         } catch (XmlException ex) {
             return processInvalidXml(response);

@@ -16,6 +16,7 @@ import org.apache.xmlbeans.XmlObject;
 import de.ifgi.airbase.feeder.io.filter.CompositeFileFilter;
 import de.ifgi.airbase.feeder.io.filter.FileExtensionFilter;
 import de.ifgi.airbase.feeder.io.filter.PrefixFileFilter;
+import de.ifgi.airbase.feeder.io.sos.http.SosException;
 import de.ifgi.airbase.feeder.io.sos.http.TransactionalSosClient;
 
 public class StaticFileFeeder extends TransactionalSosClient implements Runnable {
@@ -41,7 +42,8 @@ public class StaticFileFeeder extends TransactionalSosClient implements Runnable
 				while ((in = post(req)) == null) {
                     log.warn("Connection failed. Trying again.");
                 }
-				if (processResponse(in)) {
+                SosException processResponse = processResponse(in);
+                if (processResponse != null && processResponse.isFatal()) {
                     f.delete();
                 }
 			} catch (IOException e) {
