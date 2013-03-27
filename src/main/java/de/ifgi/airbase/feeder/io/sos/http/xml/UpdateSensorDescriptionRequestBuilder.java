@@ -70,7 +70,7 @@ public class UpdateSensorDescriptionRequestBuilder extends AbstractXmlBuilder<Up
         updateSensor.setVersion(SOS_V2_SERVICE_VERSION);
         updateSensor.setProcedureDescriptionFormat(SOSNamespaceUtils.SML_1_0_1_PROCEDURE_DESCRIPTION_FORMAT);
         updateSensor.setProcedure(getStationId(getStation()));
-        updateSensor.addNewDescription().set(getDescription());
+        updateSensor.addNewDescription().addNewSensorDescription().addNewData().set(getDescription());
         SOSNamespaceUtils.insertSchemaLocations(updateSensor);
         return updateSensorDoc;
     }
