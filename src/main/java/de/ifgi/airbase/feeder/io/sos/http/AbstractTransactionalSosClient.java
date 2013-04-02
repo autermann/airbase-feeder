@@ -66,6 +66,11 @@ import net.opengis.swes.x20.UpdateSensorDescriptionResponseDocument;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.w3.x2003.x05.soapEnvelope.Body;
 import org.w3.x2003.x05.soapEnvelope.EnvelopeDocument;
 import org.w3.x2003.x05.soapEnvelope.FaultDocument;
@@ -341,7 +346,7 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
             List<EEAMeasurement> valuesToInsert = new LinkedList<EEAMeasurement>();
             while (valuesToInsert.size() < VALUES_PER_REQUEST && index < allMeasurements.size()) {
                 EEAMeasurement e = allMeasurements.get(index);
-                if (e.isValid() && (trf == null || trf.accept(e))) {
+                if (e.isValid() && (trf == null || trf.accept(e)) && !isDstDuplicate(e)) {
                     valuesToInsert.add(e);
                 }
                 index++;
@@ -355,5 +360,29 @@ public abstract class AbstractTransactionalSosClient extends SosClient {
     }
     
     protected abstract void insertObservations(int req, EEARawDataFile file, List<EEAMeasurement> valuesToInsert) throws IOException, RequestFailedException;
-    
+
+    private boolean isDstDuplicate(EEAMeasurement e) {
+        DateTime d = new DateTime(DateTimeZone.UTC)
+                .withYear(e.getTime().getYear())
+                .withMonthOfYear(DateTimeConstants.OCTOBER)
+                .withDayOfMonth(getLastSundayOfOctober(e.getTime().getYear()))
+                .withHourOfDay(1)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0);
+        return d.equals(e.getTime());
+    }
+
+    protected int getLastSundayOfOctober(int year) {
+        LocalDate ld = new LocalDate(year, DateTimeConstants.OCTOBER, 1)
+                .dayOfMonth()
+                .withMaximumValue()
+                .dayOfWeek()
+                .setCopy(DateTimeConstants.SUNDAY);
+        if (ld.getMonthOfYear() != DateTimeConstants.OCTOBER) {
+            return ld.minus(Period.days(7)).getDayOfMonth();
+        } else {
+            return ld.getDayOfMonth();
+        }
+    }
 }
