@@ -175,7 +175,35 @@
 						<version>1.0-beta-7</version>
 					</dependency>
 				</dependencies>
-			</plugin>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <header>src/main/resources/licenseHeader.txt</header>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/*.jsp</include>
+                        <include>**/*.js</include>
+                        <include>**/*.xsl</include>
+                        <include>**/*.sql</include>
+                    </includes>
+                    <strictCheck>true</strictCheck>
+                    <properties>
+                        <year>2013</year>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
 		</plugins>
 	</build>
 	<distributionManagement>
