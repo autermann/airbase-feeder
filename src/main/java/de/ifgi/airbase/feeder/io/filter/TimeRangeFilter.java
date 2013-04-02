@@ -36,29 +36,6 @@ import de.ifgi.airbase.feeder.util.Utils;
 
 public class TimeRangeFilter implements FileFilter {
 
-    private class Range {
-        private DateTime start, end;
-
-        public Range(DateTime start, DateTime end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        public boolean accept(DateTime dt) {
-            if (this.start == null) {
-                if (this.end == null) {
-                    throw new NullPointerException();
-                }
-                return dt.isBefore(this.end) || dt.isEqual(this.end);
-            }
-            if (this.end == null) {
-                return dt.isAfter(this.start) || dt.isEqual(this.start);
-            }
-            return (dt.isAfter(this.start) || dt.isEqual(this.start))
-                    && (dt.isBefore(this.end) || dt.isEqual(this.end));
-        }
-    }
-
     private LinkedList<Range> ranges = new LinkedList<Range>();
 
     public void addStartEndRange(DateTime start, DateTime end) {
@@ -86,9 +63,11 @@ public class TimeRangeFilter implements FileFilter {
     }
 
     public boolean accept(DateTime dt) {
-        for (Range r : this.ranges)
-            if (r.accept(dt))
+        for (Range r : this.ranges) {
+            if (r.accept(dt)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -102,8 +81,9 @@ public class TimeRangeFilter implements FileFilter {
     }
     
     private boolean overlap(Range r1, Range r2) {
-    	if (r1 == null || r2 == null)
-    		throw new NullPointerException();
+        if (r1 == null || r2 == null) {
+            throw new NullPointerException();
+        }
     	if (r1.start == null) { 
     		if (r2.start == null) {
         		return true;
@@ -135,6 +115,29 @@ public class TimeRangeFilter implements FileFilter {
             return accept(new Range(start,end));
         }
         return false;
+    }
+
+    private class Range {
+        private DateTime start, end;
+
+        Range(DateTime start, DateTime end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public boolean accept(DateTime dt) {
+            if (this.start == null) {
+                if (this.end == null) {
+                    throw new NullPointerException();
+                }
+                return dt.isBefore(this.end) || dt.isEqual(this.end);
+            }
+            if (this.end == null) {
+                return dt.isAfter(this.start) || dt.isEqual(this.start);
+            }
+            return (dt.isAfter(this.start) || dt.isEqual(this.start))
+                   && (dt.isBefore(this.end) || dt.isEqual(this.end));
+        }
     }
 
     
